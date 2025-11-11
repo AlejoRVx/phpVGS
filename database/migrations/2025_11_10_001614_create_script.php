@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('Roles', function (Blueprint $table) {
             $table->id();
             $table->string('tipo');
+            $table->timestamps();
+            
         });
 
         Schema::create('Usuarios', function (Blueprint $table) {
@@ -24,6 +26,7 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('telefono');
             $table->foreignId('rol_id')->constrained('Roles');
+            $table->timestamps();
         });
 
         Schema::create('Auditorias', function (Blueprint $table) {
@@ -32,6 +35,7 @@ return new class extends Migration
             $table->string('accion');
             $table->string('cambios');
             $table->dateTime('fecha');
+            $table->timestamps();
         });
 
         Schema::create('Productos', function (Blueprint $table) {
@@ -45,6 +49,7 @@ return new class extends Migration
             $table->decimal('precio', 8, 2);
             $table->string('descripcion');
             $table->string('imagen');
+            $table->timestamps();
         });
 
         Schema::create('Resenas', function (Blueprint $table) {
@@ -54,6 +59,7 @@ return new class extends Migration
             $table->dateTime('fecha');
             $table->foreignId('usuario_id')->constrained('Usuarios');
             $table->foreignId('producto_id')->constrained('Productos');
+            $table->timestamps();
         });
 
         Schema::create('Pedidos', function (Blueprint $table) {
@@ -61,6 +67,7 @@ return new class extends Migration
             $table->decimal('total', 8, 2);
             $table->boolean('estado');
             $table->foreignId('usuario_id')->constrained('Usuarios');
+            $table->timestamps();
         });
 
         Schema::create('Pedido_Productos', function (Blueprint $table) {
@@ -69,7 +76,7 @@ return new class extends Migration
             $table->decimal('precio_unitario', 8, 2);
             $table->foreignId('pedido_id')->constrained('Pedidos');
             $table->foreignId('producto_id')->constrained('Productos');
-            
+            $table->timestamps();
         });
 
         Schema::create('Pagos', function (Blueprint $table) {
@@ -78,9 +85,9 @@ return new class extends Migration
             $table->string('metodo');
             $table->decimal('total', 8, 2);
             $table->foreignId('pedido_id')->constrained('Pedidos');
+            $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
