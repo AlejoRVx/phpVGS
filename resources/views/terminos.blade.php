@@ -90,7 +90,7 @@
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">4. Envíos y Entregas</h3>
         <div class="space-y-4 mb-6">
             <p class="font-medium text-lg text-white">4.1 Tiempos de Entrega</p>
-            <p class="text-gray-300 ml-4">Los tiempos de entrega son estimados y varían según la ubicación. El Usuario será notificado del número de seguimiento tan pronto como el pedido sea enviado. **Plazo estimado: 5 a 10 días hábiles.**</p>
+            <p class="text-gray-300 ml-4">Los tiempos de entrega son estimados y varían según la ubicación. El Usuario será notificado del número de seguimiento tan pronto como el pedido sea enviado. Plazo estimado: 5 a 10 días hábiles.</p>
 
             <p class="font-medium text-lg text-white">4.2 Riesgo de Pérdida</p>
             <p class="text-gray-300 ml-4">El riesgo de pérdida de los productos pasa al Usuario en el momento de la entrega por parte del transportista.</p>
@@ -99,10 +99,10 @@
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">5. Política de Devoluciones y Garantías</h3>
         <div class="space-y-4 mb-6">
             <p class="font-medium text-lg text-white">5.1 Devoluciones</p>
-            <p class="text-gray-300 ml-4">Solo se aceptarán devoluciones de productos defectuosos o incorrectos, o en el caso de retracto dentro de los **15** días siguientes a la recepción, siempre y cuando el producto se encuentre en su empaque original y sin abrir (para videojuegos y software).</p>
+            <p class="text-gray-300 ml-4">Solo se aceptarán devoluciones de productos defectuosos o incorrectos, o en el caso de retracto dentro de los 15 días siguientes a la recepción, siempre y cuando el producto se encuentre en su empaque original y sin abrir (para videojuegos y software).</p>
 
             <p class="font-medium text-lg text-white">5.2 Garantía</p>
-            <p class="text-gray-300 ml-4">La garantía aplicable a los productos de *hardware* (consolas, accesorios) es la ofrecida por el fabricante. VGStorm actuará como intermediario para facilitar la gestión de la garantía, pero no es la responsable final.</p>
+            <p class="text-gray-300 ml-4">La garantía aplicable a los productos de hardware (consolas, accesorios) es la ofrecida por el fabricante. VGStorm actuará como intermediario para facilitar la gestión de la garantía, pero no es la responsable final.</p>
         </div>
 
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">6. Propiedad Intelectual</h3>
@@ -128,7 +128,7 @@
     <footer class="bg-gray-900 border-t border-gray-700 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
-                <p class="text-gray-400">&copy; 2023 VGStorm. Derechos reservados.</p>
+                <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
                 <div class="mt-4">
                     <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
                 </div>

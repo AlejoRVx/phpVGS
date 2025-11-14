@@ -49,7 +49,7 @@
     <footer class="bg-gray-900 border-t border-gray-700 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
-                <p class="text-gray-400">&copy; 2023 VGStorm. Derechos reservados.</p>
+                <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
                 <div class="mt-4">
                     <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
                 </div>
