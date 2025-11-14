@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pedido_Productos extends Model
 {
-    public $table = 'pedido_productos';
+    protected $table = 'pedido_productos';
     
-    public $fillable = [
+    protected $fillable = [
         'pedido_id',
         'producto_id',
         'cantidad',

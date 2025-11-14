@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pagos extends Model
 {
-    public $table = 'pagos';
+    protected $table = 'pagos';
 
-    public $fillable = [
+    protected $fillable = [
         'pedido_id',
         'total',
         'metodo',

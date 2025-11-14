@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Roles extends Model
 {
-    public $table = 'roles';
+    protected $table = 'roles';
 
-    public $fillable = [
+    protected $fillable = [
         'tipo',
     ];
 }

@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Auditorias extends Model
 {
-    public $table = 'auditorias';
+    protected $table = 'auditorias';
     
-    public $fillable = [
+    protected $fillable = [
         'tabla',
         'accion',
         'fecha',

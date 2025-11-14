@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Usuarios;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Usuarios; 
 
 class UsuariosController extends Controller
 {
@@ -12,6 +12,7 @@ class UsuariosController extends Controller
     {
         return view('register');
     }
+
     public function register(Request $request)
     {
         $validatedData = $request->validate([
@@ -28,7 +29,7 @@ class UsuariosController extends Controller
         $usuario->nombre = $validatedData['nombre'];
         $usuario->direccion = $validatedData['direccion'];
         $usuario->telefono = $validatedData['telefono'];
-        $usuario->rol_id = 1; // Default role as User
+        $usuario->rol_id = 1;
         $usuario->save();
 
         return redirect('/');
@@ -36,26 +37,29 @@ class UsuariosController extends Controller
 
     public function login(Request $request)
     {
-        
-        return view('main');
-        
-        /*
         $credentials = $request->validate([
             'correo' => 'required|email',
             'contrasena' => 'required',
         ]);
 
-        $usuario = Usuarios::where('correo', $credentials['correo'])->first();
+        $remember = $request->has('remember'); 
 
-        if ($usuario && Hash::check($credentials['contrasena'], $usuario->contrasena)) {
-            // Authentication passed
-            // Here you would typically set session data or a token
-            return redirect('/main');
-        } else {
-            return back()->withErrors([
-                'correo' => 'The provided credentials do not match our records.',
-            ]);
-        } 
-        */
+        if (Auth::attempt([
+            'correo' => $credentials['correo'], 
+            'password' => $credentials['contrasena'] 
+        ], $remember)) {
+
+            $request->session()->regenerate();
+
+            return redirect()->intended('/main');
+        }
+        
+        return back()->withErrors([
+            'correo' => 'Clave o correo inválidos. Inténtalo de nuevo.',
+        ])->onlyInput('correo');
+    }
+    public function cerrarsesion(Request $request)
+    {
+        session()->flash(...);
     }
 }

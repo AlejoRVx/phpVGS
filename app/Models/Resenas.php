@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Resenas extends Model
 {
-    public $table = 'resenas';
+    protected $table = 'resenas';
 
-    public $fillable = [
+    protected $fillable = [
         'usuario_id',
         'producto_id',
         'calificacion',

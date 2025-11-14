@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
     <title>Registro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -24,13 +25,11 @@
 </head>
 <body class="text-white">
     <div class="max-w-md mx-auto bg-gray-900 p-8 rounded-lg shadow-2xl border border-gray-700">
-        <!-- Logo -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</h1>
             <p class="text-lg mt-2 text-gray-300">Unete a la mejor experiencia gaming!</p>
         </div>
 
-        <!-- Register Form -->
         <form action="{{ url('/register') }}" method="POST" class="space-y-6">
             @csrf
             <div>
@@ -56,14 +55,8 @@
             <button type="submit" class="w-full neon-blue text-black font-bold py-2 px-4 rounded-md transition duration-300">Registrarse</button>
         </form>
 
-        <!-- Login Link -->
         <div class="mt-6 text-center">
             <p class="text-gray-300">Ya tienes una cuenta? <a href="{{ url('/') }}" class="text-blue-400 hover:text-blue-300 font-medium">Inicia sesión aquí</a></p>
-        </div>
-
-        <!-- Additional Links -->
-        <div class="mt-4 text-center">
-            <a href="#" class="text-sm text-gray-400 hover:text-gray-300">Terminos y servicios</a> | <a href="#" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
         </div>
     </div>
 </body>

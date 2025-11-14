@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
     <title>Inicio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -20,39 +21,37 @@
     </style>
 </head>
 <body class="text-white">
-    <!-- Header -->
     <header class="bg-gray-900 border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</h1>
+                    <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
+                    <a href="/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
                 </div>
                 <nav class="hidden md:flex space-x-8">
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="#" class="text-gray-300 hover:text-blue-400 transition duration-300">Perfil</a>
-                    <a href="/" class="text-gray-300 hover:text-blue-400 transition duration-300">Cerrar sesión</a>
+                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Hero Section -->
         <section class="text-center mb-12">
             <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">Bienvenido a VGStorm</h2>
             <p class="text-xl text-gray-300 mb-8">La mejor experiencia de juego te espera. Sumérgete en un mundo de aventuras épicas, conecta con otros jugadores y libera todo tu potencial.</p>
         </section>
     </main>
 
-    @<footer class="bg-gray-900 border-t border-gray-700 mt-12">
+    <footer class="bg-gray-900 border-t border-gray-700 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
                 <p class="text-gray-400">&copy; 2023 VGStorm. Derechos reservados.</p>
                 <div class="mt-4">
-                    <a href="#" class="text-sm text-gray-400 hover:text-gray-300">Terminos y servicios</a> | <a href="#" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
+                    <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
                 </div>
             </div>
         </div>

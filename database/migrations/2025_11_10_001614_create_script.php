@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('telefono');
             $table->foreignId('rol_id')->constrained('Roles');
+            $table->rememberToken();
             $table->timestamps();
         });
 

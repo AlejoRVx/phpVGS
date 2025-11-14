@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pedidos extends Model
 {
-    public $table = 'pedidos';
+    protected $table = 'pedidos';
 
-    public $fillable = [
+    protected $fillable = [
         'usuario_id',
         'total',
         'estado',
