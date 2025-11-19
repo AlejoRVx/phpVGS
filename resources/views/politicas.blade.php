@@ -46,7 +46,7 @@
             POLÍTICA DE PRIVACIDAD
         </h2>
         <p class="text-lg text-gray-400">
-            Última actualización: 13-nov-2025
+            Última actualización: 02-nov-2025
         </p>
     </section>
 

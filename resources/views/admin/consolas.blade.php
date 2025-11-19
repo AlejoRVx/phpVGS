@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
+    <title>Consolas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .neon-blue {
+            background-color: #00efffff;
+            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 4px #00efffff;
+        }
+        .neon-blue:hover {
+            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 8px #00efffff;
+        }
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <header class="bg-gray-900 border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
+                    <a href="/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/admin/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
+                    <a href="/admin/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
+                    <a href="/admin/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
+                    <a href="/admin/listausuarios" class="text-gray-300 hover:text-blue-400 transition duration-300">Usuarios</a>
+                    <a href="/admin/auditorias" class="text-gray-300 hover:text-blue-400 transition duration-300">Auditorias</a>
+                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section class="text-center mb-12">
+            <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">Nuestras consolas</h2>
+        </section>
+
+        <section id="barra-busqueda" class="mb-12">
+            <form action="#" method="GET" class="max-w-3xl mx-auto flex">
+                <input type="search" name="q" placeholder="Buscar por nombre, compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
+                <button type="submit" class="px-5 bg-purple-800 text-white font-semibold rounded-r-lg hover:bg-purple-600 transition duration-300 flex items-center shadow-md shadow-purple-600/20">
+                    🔎 Buscar
+                </button>
+            </form>
+        </section>
+
+        <hr class="border-t-2 border-gray-700 mt-12 mb-8">
+
+        <section id="catalogo-juegos" class="py-6">
+            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-8 text-center">
+                🕹️ Catálogo de consolas Destacadas
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
+                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen7.jpg') }}" alt="Play Station 5">
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-blue-400 mb-2">Play Station 5</h3>
+                        
+                        <p class="text-sm text-gray-400 mb-3">
+                            <span class="font-semibold">Compañía:</span> Sony Interactive Entertainment.
+                        </p>
+
+                        <div class="flex items-center mb-4">
+                            <span class="text-yellow-400 text-lg mr-2">
+                                ⭐⭐⭐⭐✨
+                            </span>
+                            <span class="text-sm text-gray-500">(250.8k reviews)</span>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-2xl font-bold text-purple-400">3.000.000$</span>
+                            
+                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
+                                Añadir 🛒
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
+                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen8.jpg') }}" alt="Xbox Series X">
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-blue-400 mb-2">Xbox Series X</h3>
+                        
+                        <p class="text-sm text-gray-400 mb-3">
+                            <span class="font-semibold">Compañía:</span> Microsoft Corporation.
+                        </p>
+
+                        <div class="flex items-center mb-4">
+                            <span class="text-yellow-400 text-lg mr-2">
+                                ⭐⭐⭐⭐⭐
+                            </span>
+                            <span class="text-sm text-gray-500">(200.8k reviews)</span>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-2xl font-bold text-purple-400">2.600.000$</span>
+                            
+                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
+                                Añadir 🛒
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
+                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen9.jpg') }}" alt="Nintendo Switch 2">
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-blue-400 mb-2">Nintendo Switch 2</h3>
+                        
+                        <p class="text-sm text-gray-400 mb-3">
+                            <span class="font-semibold">Compañía:</span> Nintendo.
+                        </p>
+
+                        <div class="flex items-center mb-4">
+                            <span class="text-yellow-400 text-lg mr-2">
+                                ⭐⭐⭐⭐✨
+                            </span>
+                            <span class="text-sm text-gray-500">(160.2k reviews)</span>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-2xl font-bold text-purple-400">2.900.000$</span>
+                            
+                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
+                                Añadir 🛒
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 border-t border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
+                <div class="mt-4">
+                    <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

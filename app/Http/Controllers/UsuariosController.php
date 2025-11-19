@@ -51,6 +51,12 @@ class UsuariosController extends Controller
 
             $request->session()->regenerate();
 
+            $usuario = Auth::user();
+
+            if ($usuario->rol_id == 2) {
+                return redirect()->intended('/admin/main');
+            }
+
             return redirect()->intended('/main');
         }
         
@@ -58,8 +64,55 @@ class UsuariosController extends Controller
             'correo' => 'Clave o correo inválidos. Inténtalo de nuevo.',
         ])->onlyInput('correo');
     }
+
     public function cerrarsesion(Request $request)
     {
-        session()->flash(...);
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+
+    public function listarUsuarios()
+    {
+        $usuarios = Usuarios::all();
+        return view('admin.listausuarios', compact('usuarios'));
+    }
+
+    public function delete(Request $request)
+    {
+        $request->validate([
+            'usuario_id' => 'required|exists:usuarios,id'
+        ]);
+
+        $usuario = Usuarios::findOrFail($request->usuario_id);
+        $usuario->delete();
+
+        return redirect('/admin/listausuarios')->with('success', 'Usuario eliminado correctamente');
+    }
+
+    public function editarUsuario($id)
+    {
+        $usuario = Usuarios::findOrFail($id);
+        return view('admin.editarusuario', compact('usuario'));
+    }
+
+    public function actualizarUsuario(Request $request)
+    {
+        $request->validate([
+            'usuario_id' => 'required|exists:usuarios,id',
+            'nombre' => 'required|string|max:255',
+            'direccion' => 'required|string|max:500',
+            'telefono' => 'required|string|max:15',
+        ]);
+
+        $usuario = Usuarios::findOrFail($request->usuario_id);
+        $usuario->nombre = $request->nombre;
+        $usuario->direccion = $request->direccion;
+        $usuario->telefono = $request->telefono;
+        $usuario->rol_id = $request->rol_id;
+        $usuario->save();
+
+        return redirect('/admin/listausuarios')->with('success', 'Usuario actualizado correctamente');
     }
 }
