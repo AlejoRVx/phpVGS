@@ -32,7 +32,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
                     <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
-                    <a href="/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+                    <a href="/admin/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
                 </div>
                 <nav class="hidden md:flex space-x-8">
                     <a href="/admin/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
@@ -55,7 +55,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 @foreach ($usuarios as $usuario)
-                    <div class="bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300">
+                    <div class="bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300 transform hover:scale-105">
                         <h3 class="text-xl font-bold mb-2 text-blue-400">{{ $usuario->correo }}</h3>
                         <h3 class="text-gray-300">{{ $usuario->nombre }}</h3>
                         <h3 class="text-gray-300">{{ $usuario->direccion }}</h3>
@@ -64,14 +64,14 @@
                         <p class="text-gray-300"><strong>Registrado el:</strong> {{ $usuario->created_at->format('d/m/Y') }}</p>
                         
                         <div class="flex gap-2 mt-4">
-                            <a href="{{ url('/admin/editarusuario/' . $usuario->id) }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition duration-300">
+                            <a href="{{ url('/admin/editarusuario/' . $usuario->id) }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-blue-500 transition duration-300">
                                 Editar Usuario
                             </a>
                             
                             <form action="{{ url('/admin/listausuarios') }}" method="POST" class="inline">
                                 @csrf
                                 <input type="hidden" name="usuario_id" value="{{ $usuario->id }}">
-                                <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-red-600 transition duration-300" onclick="return confirm('¿Estás seguro que deseas eliminar este usuario?');">
+                                <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-red-600 transition duration-500" onclick="return confirm('¿Estás seguro que deseas eliminar este usuario?');">
                                     Eliminar Usuario
                                 </button>
                             </form>
@@ -86,9 +86,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
                 <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
-                <div class="mt-4">
-                    <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
-                </div>
             </div>
         </div>
     </footer>

@@ -14,4 +14,8 @@ class Pedido_Productos extends Model
         'cantidad',
         'precio_unitario',
     ];
+
+    protected $casts = [
+        'precio_unitario' => 'decimal:2',
+    ];
 }

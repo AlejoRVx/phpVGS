@@ -15,4 +15,8 @@ class Resenas extends Model
         'comentario',
         'fecha',
     ];
+
+    protected $casts = [
+        'fecha' => 'datetime',
+    ];
 }

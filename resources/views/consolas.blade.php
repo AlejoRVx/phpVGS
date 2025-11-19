@@ -61,87 +61,37 @@
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
-                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen7.jpg') }}" alt="Play Station 5">
-                    
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-blue-400 mb-2">Play Station 5</h3>
-                        
-                        <p class="text-sm text-gray-400 mb-3">
-                            <span class="font-semibold">Compañía:</span> Sony Interactive Entertainment.
-                        </p>
-
-                        <div class="flex items-center mb-4">
-                            <span class="text-yellow-400 text-lg mr-2">
-                                ⭐⭐⭐⭐✨
-                            </span>
-                            <span class="text-sm text-gray-500">(250.8k reviews)</span>
-                        </div>
-
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-2xl font-bold text-purple-400">3.000.000$</span>
+                @foreach ($productos as $producto)
+                    <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50 flex flex-col">
+                        <img class="w-full h-48 object-cover object-center" src="{{ asset('img/' . $producto->imagen) }}" alt="{{ $producto->nombre }}">
                             
-                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
-                                Añadir 🛒
-                            </button>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-blue-400 mb-2">{{ $producto->nombre }}</h3>
+                                
+                            <p class="text-sm text-gray-400 mb-3">
+                                <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
+                                <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
+                            </p>
+
+                            <div class="flex items-center mb-4">
+                                <span class="text-yellow-400 text-lg mr-2">
+                                    ⭐⭐⭐⭐✨
+                                </span>
+                                <span class="text-sm text-gray-500">4.5/5</span>
+                            </div>
+
+                            <p class="text-sm text-gray-400 mb-4">{{ $producto->descripcion }}</p>
+
+                            <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
+                                <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
+                                    
+                                <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
+                                    Añadir 🛒
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
-                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen8.jpg') }}" alt="Xbox Series X">
-                    
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-blue-400 mb-2">Xbox Series X</h3>
-                        
-                        <p class="text-sm text-gray-400 mb-3">
-                            <span class="font-semibold">Compañía:</span> Microsoft Corporation.
-                        </p>
-
-                        <div class="flex items-center mb-4">
-                            <span class="text-yellow-400 text-lg mr-2">
-                                ⭐⭐⭐⭐⭐
-                            </span>
-                            <span class="text-sm text-gray-500">(200.8k reviews)</span>
-                        </div>
-
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-2xl font-bold text-purple-400">2.600.000$</span>
-                            
-                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
-                                Añadir 🛒
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50">
-                    <img class="w-full h-48 object-cover object-center" src="{{ asset('img/imagen9.jpg') }}" alt="Nintendo Switch 2">
-                    
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-blue-400 mb-2">Nintendo Switch 2</h3>
-                        
-                        <p class="text-sm text-gray-400 mb-3">
-                            <span class="font-semibold">Compañía:</span> Nintendo.
-                        </p>
-
-                        <div class="flex items-center mb-4">
-                            <span class="text-yellow-400 text-lg mr-2">
-                                ⭐⭐⭐⭐✨
-                            </span>
-                            <span class="text-sm text-gray-500">(160.2k reviews)</span>
-                        </div>
-
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-2xl font-bold text-purple-400">2.900.000$</span>
-                            
-                            <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
-                                Añadir 🛒
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </section>
     </main>

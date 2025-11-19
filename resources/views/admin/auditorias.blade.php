@@ -32,7 +32,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
                     <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
-                    <a href="/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+                    <a href="/admin/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
                 </div>
                 <nav class="hidden md:flex space-x-8">
                     <a href="/admin/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
@@ -56,9 +56,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
                 <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
-                <div class="mt-4">
-                    <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
-                </div>
             </div>
         </div>
     </footer>

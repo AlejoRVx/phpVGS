@@ -13,4 +13,8 @@ class Auditorias extends Model
         'accion',
         'fecha',
     ];
+
+    protected $casts = [
+        'fecha' => 'datetime',
+    ];
 }

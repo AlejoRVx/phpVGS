@@ -14,4 +14,9 @@ class Pagos extends Model
         'metodo',
         'fecha_pago',
     ];
+
+    protected $casts = [
+        'total' => 'decimal:2',
+        'fecha_pago' => 'datetime',
+    ];
 }

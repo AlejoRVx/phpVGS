@@ -19,4 +19,9 @@ class Productos extends Model
         'descripcion',
         'imagen',
     ];
+
+    protected $casts = [
+        'fecha_lanzamiento' => 'datetime',
+        'precio' => 'decimal:2',
+    ];
 }

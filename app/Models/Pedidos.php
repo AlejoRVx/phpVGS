@@ -13,4 +13,8 @@ class Pedidos extends Model
         'total',
         'estado',
     ];
+
+    protected $casts = [
+        'total' => 'decimal:2',
+    ];
 }

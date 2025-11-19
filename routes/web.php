@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
+use App\Http\Controllers\ProductosController;
 
 Route::get('/', function () {
     return view('login');
@@ -21,21 +22,13 @@ Route::post('/main', function () {
     return view('main');
 });
 
-Route::get('/consolas', function () {
-    return view('consolas');
-});
+Route::get('/juegos', [ProductosController::class, 'listarjuegosuser'])->name('productos.listarjuegosuser');
 
-Route::post('/consolas', function () {
-    return view('consolas');
-});
+Route::post('/juegos', [ProductosController::class, 'agregarAlCarrito'])->name('productos.agregarAlCarrito');
 
-Route::get('/juegos', function () {
-    return view('juegos');
-});
+Route::get('/consolas', [ProductosController::class, 'listarconsolasuser'])->name('productos.listarconsolasuser');
 
-Route::post('/juegos', function () {
-    return view('juegos');
-});
+Route::post('/consolas', [ProductosController::class, 'agregarAlCarrito'])->name('productos.agregarAlCarrito');
 
 Route::get('/carrito', function () {
     return view('carrito');
@@ -89,26 +82,35 @@ Route::post('/admin/editarusuario', [UsuariosController::class, 'actualizarUsuar
 
 // Nuevas rutas para secciones de administrador (POR AHORA SOLO PARA LAS VISTAS) ------------
 
-Route::get('/admin/juegos', function () {
-    return view('admin/juegos');
-});
+Route::get('/admin/juegos', [ProductosController::class, 'listarjuegos'])->name('admin.productos.listarjuegos');
 
-Route::post('/admin/juegos', function () {
-    return view('admin/juegos');
-});
+Route::post('/admin/juegos', [ProductosController::class, 'delete'])->name('admin.productos.delete');
 
-Route::get('/admin/consolas', function () {
-    return view('admin/consolas');
-});
+Route::get('/admin/consolas', [ProductosController::class, 'listarconsolas'])->name('admin.productos.listarconsolas');
 
-Route::post('/admin/consolas', function () {
-    return view('admin/consolas');
-});
+Route::post('/admin/consolas', [ProductosController::class, 'delete'])->name('admin.productos.delete');
+
+Route::get('/admin/agregarproducto/{tipo}', [ProductosController::class, 'agregarproducto'])->name('admin.productos.agregar');
+
+Route::post('/admin/actualizarproducto', [ProductosController::class, 'actualizarproducto'])->name('admin.productos.actualizar');
+
+Route::get('/admin/editarproducto/{tipo}/{id}', [ProductosController::class, 'editarproducto'])->name('admin.productos.editar');
+
+Route::post('/admin/editarproducto', [ProductosController::class, 'guardarcambios'])->name('admin.productos.guardarcambios');
 
 Route::get('/admin/auditorias', function () {
+
     return view('admin/auditorias');
 });
 
 Route::post('/admin/auditorias', function () {
     return view('admin/auditorias');
+});
+
+Route::get('/admin/politicas', function () {
+    return view('admin/politicas');
+});
+
+Route::get('/admin/terminos-y-condiciones', function () {
+    return view('admin/terminos');
 });

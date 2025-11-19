@@ -43,12 +43,12 @@ return new class extends Migration
             $table->id();
             $table->integer('stock');
             $table->string('tipo');
-            $table->string('genero');
+            $table->string('genero')->nullable();
             $table->string('nombre');
             $table->string('compania');
             $table->dateTime('fecha_lanzamiento');
-            $table->decimal('precio', 8, 2);
-            $table->string('descripcion');
+            $table->decimal('precio', 12, 2);
+            $table->string('descripcion', 1000);
             $table->string('imagen');
             $table->timestamps();
         });
@@ -65,7 +65,7 @@ return new class extends Migration
 
         Schema::create('Pedidos', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total', 8, 2);
+            $table->decimal('total', 12, 2);
             $table->boolean('estado');
             $table->foreignId('usuario_id')->constrained('Usuarios');
             $table->timestamps();
@@ -74,7 +74,7 @@ return new class extends Migration
         Schema::create('Pedido_Productos', function (Blueprint $table) {
             $table->id();
             $table->integer('cantidad');
-            $table->decimal('precio_unitario', 8, 2);
+            $table->decimal('precio_unitario', 12, 2);
             $table->foreignId('pedido_id')->constrained('Pedidos');
             $table->foreignId('producto_id')->constrained('Productos');
             $table->timestamps();
@@ -84,7 +84,7 @@ return new class extends Migration
             $table->id();
             $table->dateTime('fecha_pago');
             $table->string('metodo');
-            $table->decimal('total', 8, 2);
+            $table->decimal('total', 12, 2);
             $table->foreignId('pedido_id')->constrained('Pedidos');
             $table->timestamps();
         });
