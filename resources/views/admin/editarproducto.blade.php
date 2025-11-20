@@ -66,13 +66,15 @@
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="genero" class="block text-gray-300 font-semibold mb-2">Genero *</label>
-                    <input type="text" id="genero" name="genero" value="{{ old('genero', $producto->genero) }}" class="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    @error('genero')
-                        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                @if ($producto->tipo == "Juego")
+                    <div class="mb-4">
+                        <label for="genero" class="block text-gray-300 font-semibold mb-2">Genero *</label>
+                        <input type="text" id="genero" name="genero" value="{{ old('genero', $producto->genero) }}" class="w-full px-4 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        @error('genero')
+                            <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endif
 
                 <div class="mb-4">
                     <label for="fecha_lanzamiento" class="block text-gray-300 font-semibold mb-2">Fecha lanzamiento *</label>

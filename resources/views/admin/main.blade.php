@@ -51,7 +51,7 @@
             <div class="space-y-6">
                 
                 <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <a href="/main" class="flex items-start space-x-4 group">
+                    <div class="flex items-start space-x-4 group">
                         <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
                             <img src="{{ asset('img/imagen1.jpg') }}" alt="Imagen Steam Hardware" class="w-full h-full object-cover rounded-md aspect-square">
                         </div>
@@ -64,11 +64,11 @@
                             </p>
                             <span class="block text-xs text-gray-400 mt-2">(Nov 11, 2025)</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
 
                 <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <a href="/main" class="flex items-start space-x-4 group">
+                    <div class="flex items-start space-x-4 group">
                         <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
                             <img src="{{ asset('img/imagen2.jpg') }}" alt="Imagen GTA VI" class="w-full h-full object-cover rounded-md aspect-square">
                         </div>
@@ -81,11 +81,11 @@
                             </p>
                             <span class="block text-xs text-gray-400 mt-2">(Nov 7, 2025)</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 
                 <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <a href="/main" class="flex items-start space-x-4 group">
+                    <div class="flex items-start space-x-4 group">
                         <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
                             <img src="{{ asset('img/imagen3.jpg') }}" alt="Imagen PS Portal" class="w-full h-full object-cover rounded-md aspect-square">
                         </div>
@@ -98,7 +98,7 @@
                             </p>
                             <span class="block text-xs text-gray-400 mt-2">(Nov 7, 2025)</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
     </main>

@@ -50,8 +50,14 @@
             <h2 class="text-5xl font-bold mb-8 header-juegos">Nuestros juegos</h2>
         </section>
 
+        @if(session('success'))
+            <div class="bg-green-900 border border-green-700 text-green-200 px-4 py-3 rounded-lg mb-6 max-w-3xl mx-auto">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <section id="barra-busqueda" class="mb-12">
-            <form action="#" method="GET" class="max-w-3xl mx-auto flex">
+            <form action="{{ route('admin.juegos-buscar.buscar') }}" method="GET" class="max-w-3xl mx-auto flex">
                 <input type="search" name="q" placeholder="Buscar por nombre, género o compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
                 <button type="submit" class="px-5 bg-purple-800 text-white font-semibold rounded-r-lg hover:bg-purple-600 transition duration-300 flex items-center shadow-md shadow-purple-600/20">
                     🔎 Buscar
@@ -69,10 +75,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($productos as $producto)
                     <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50 flex flex-col">
-                        <img class="w-full h-48 object-cover object-center" src="{{ asset('img/' . $producto->imagen) }}" alt="{{ $producto->nombre }}">
+                        <a href="/juegos/{{ $producto->id }}/resenas">
+                            <img class="w-full h-48 object-cover object-center" src="{{ asset('img/' . $producto->imagen) }}" alt="{{ $producto->nombre }}">
+                        </a>
                             
                         <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-bold text-blue-400 mb-2">{{ $producto->nombre }}</h3>
+                            <a href="/juegos/{{ $producto->id }}/resenas">
+                                <h3 class="text-xl font-bold text-blue-400 mb-2 hover:text-blue-300 transition">{{ $producto->nombre }}</h3>
+                            </a>
                                 
                             <p class="text-sm text-gray-400 mb-3">
                                 <span class="font-semibold">Género:</span> {{ $producto->genero }}<br>
@@ -87,14 +97,13 @@
                                 <span class="text-sm text-gray-500">4.5/5</span>
                             </div>
 
-                            <p class="text-sm text-gray-400 mb-4">{{ $producto->descripcion }}</p>
-
                             <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
                                 <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
                                     
                                 <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
                                     Añadir 🛒
                                 </button>
+                                </form>
                             </div>
                         </div>
                     </div>

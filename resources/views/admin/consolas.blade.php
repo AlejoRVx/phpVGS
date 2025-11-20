@@ -46,8 +46,8 @@
         </section>
 
         <section id="barra-busqueda" class="mb-12">
-            <form action="#" method="GET" class="max-w-3xl mx-auto flex">
-                <input type="search" name="q" placeholder="Buscar por nombre, compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
+            <form action="{{ route('admin.consolas-buscar.buscar') }}" method="GET" class="max-w-3xl mx-auto flex">
+                <input type="search" name="q" placeholder="Buscar por nombre o compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
                 <button type="submit" class="px-5 bg-purple-800 text-white font-semibold rounded-r-lg hover:bg-purple-600 transition duration-300 flex items-center shadow-md shadow-purple-600/20">
                     🔎 Buscar
                 </button>
@@ -91,7 +91,7 @@
                                     <form action="{{ url('/admin/consolas') }}" method="POST" class="inline">
                                         @csrf
                                         <input type="hidden" name="producto_id" value="{{ $producto->id }}">
-                                        <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-500 hover:bg-red-600" onclick="return confirm('¿Estás seguro que deseas eliminar este juego?');">
+                                        <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-500 hover:bg-red-600" onclick="return confirm('¿Estás seguro que deseas eliminar esta consola?');">
                                             Eliminar
                                         </button>
                                     </form>

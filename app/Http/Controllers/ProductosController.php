@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Productos;
+use Illuminate\Support\Facades\Auth;
 
 class ProductosController extends Controller
 {
@@ -50,17 +51,14 @@ class ProductosController extends Controller
         'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
     ]);
 
-    // Guardar la imagen
     if ($request->hasFile('imagen')) {
         $imageName = $data['nombre'] . '.' . $request->imagen->extension();
         $request->imagen->move(public_path('img'), $imageName);
         $data['imagen'] = $imageName;
     }
 
-    // Crear el producto
     Productos::create($data);
 
-    // Redirigir según el tipo
     if ($data['tipo'] == 'Juego') {
         return redirect('/admin/juegos')->with('success', 'Juego agregado exitosamente.');
     } else {
@@ -96,9 +94,7 @@ public function guardarcambios(Request $request){
     $producto->precio = $request->precio;
     $producto->descripcion = $request->descripcion;
     
-    // Manejar la imagen si se ha subido una nueva
     if ($request->hasFile('imagen')) {
-        // Opcional: Eliminar la imagen anterior si existe
         if ($producto->imagen && file_exists(public_path('img/' . $producto->imagen))) {
             unlink(public_path('img/' . $producto->imagen));
         }
@@ -130,14 +126,49 @@ public function delete(Request $request)
     }
 }
 
-    /*
-    public function Agregar(Request $request)
-    {
-        // Lógica para agregar un producto al carrito
-        $productoId = $request->input('producto_id');
-        // Aquí puedes implementar la lógica para agregar el producto al carrito del usuario
+public function buscarjuegos(Request $request)
+{
+    $search = $request->q;
 
-        return redirect()->route('productos.index')->with('success', 'Producto agregado al carrito.');
-    }
-    */
+    $productos = Productos::where('tipo', 'juego')
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'LIKE', "%{$search}%")
+                  ->orWhere('genero', 'LIKE', "%{$search}%")
+                  ->orWhere('compania', 'LIKE', "%{$search}%")
+                  ->orWhere('precio', 'LIKE', "%{$search}%");
+            });
+        })->get();
+
+        $usuario = Auth::user();
+
+        if($usuario->rol_id == 2){
+            return view('admin.juegos', compact('productos'));
+        }
+        return view('juegos', compact('productos'));
+}
+
+public function buscarconsolas(Request $request)
+{
+    $search = $request->q;
+
+    $productos = Productos::where('tipo', 'consola')
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'LIKE', "%{$search}%")
+                  ->orWhere('compania', 'LIKE', "%{$search}%")
+                  ->orWhere('precio', 'LIKE', "%{$search}%");
+
+            });
+        })->get();
+
+        $usuario = Auth::user();
+
+        if($usuario->rol_id == 2){
+            return view('admin.consolas', compact('productos'));
+        }
+        return view('consolas', compact('productos'));
+}
+
+
 }

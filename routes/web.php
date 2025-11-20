@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\ResenasController;
+use App\Http\Controllers\PedidosController;
 
 Route::get('/', function () {
     return view('login');
@@ -24,11 +26,19 @@ Route::post('/main', function () {
 
 Route::get('/juegos', [ProductosController::class, 'listarjuegosuser'])->name('productos.listarjuegosuser');
 
-Route::post('/juegos', [ProductosController::class, 'agregarAlCarrito'])->name('productos.agregarAlCarrito');
+Route::post('/juegos', [PedidosController::class, 'agregar'])->name('productos.agregar');
+
+Route::get('/carrito', [PedidosController::class, 'listar'])->name('pedidos.listar');
+
+Route::post('/Pedidos', [PedidosController::class, 'agregar'])->name('pedidos.agregar');
 
 Route::get('/consolas', [ProductosController::class, 'listarconsolasuser'])->name('productos.listarconsolasuser');
 
-Route::post('/consolas', [ProductosController::class, 'agregarAlCarrito'])->name('productos.agregarAlCarrito');
+Route::post('/consolas', [PedidosController::class, 'agregar'])->name('productos.agregar');
+
+Route::get('/juegos-buscar', [ProductosController::class, 'buscarjuegos'])->name('juegos-buscar.buscar');
+
+Route::get('/consolas-buscar', [ProductosController::class, 'buscarconsolas'])->name('consolas-buscar.buscar');
 
 Route::get('/carrito', function () {
     return view('carrito');
@@ -62,6 +72,12 @@ Route::post('/clave-olvidada', function () {
     return view('login');
 });
 
+Route::get('/resenas', function () {
+    return view('resenas');
+});
+
+Route::get('/juegos/{id}/resenas', [ResenasController::class, 'show'])->name('juegos.resenas');
+
 // Rutas de administrador ---------------------------------------------------
 
 Route::get('/admin/main', function () {
@@ -79,8 +95,6 @@ Route::post('/admin/listausuarios', [UsuariosController::class, 'delete'])->name
 Route::get('/admin/editarusuario/{id}', [UsuariosController::class, 'editarUsuario'])->name('admin.usuarios.editar');
 
 Route::post('/admin/editarusuario', [UsuariosController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
-
-// Nuevas rutas para secciones de administrador (POR AHORA SOLO PARA LAS VISTAS) ------------
 
 Route::get('/admin/juegos', [ProductosController::class, 'listarjuegos'])->name('admin.productos.listarjuegos');
 
@@ -107,10 +121,6 @@ Route::post('/admin/auditorias', function () {
     return view('admin/auditorias');
 });
 
-Route::get('/admin/politicas', function () {
-    return view('admin/politicas');
-});
+Route::get('/admin/juegos-buscar', [ProductosController::class, 'buscarjuegos'])->name('admin.juegos-buscar.buscar');
 
-Route::get('/admin/terminos-y-condiciones', function () {
-    return view('admin/terminos');
-});
+Route::get('/admin/consolas-buscar', [ProductosController::class, 'buscarconsolas'])->name('admin.consolas-buscar.buscar');
