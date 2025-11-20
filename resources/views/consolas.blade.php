@@ -45,7 +45,7 @@
         </section>
 
         <section id="barra-busqueda" class="mb-12">
-            <form action="{{ route('admin.consolas-buscar.buscar') }}" method="GET" class="max-w-3xl mx-auto flex">
+            <form action="{{ route('consolas-buscar.buscar') }}" method="GET" class="max-w-3xl mx-auto flex">
                 <input type="search" name="q" placeholder="Buscar por nombre o compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
                 <button type="submit" class="px-5 bg-purple-800 text-white font-semibold rounded-r-lg hover:bg-purple-600 transition duration-300 flex items-center shadow-md shadow-purple-600/20">
                     🔎 Buscar
@@ -76,13 +76,6 @@
                                 <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
                                 <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
                             </p>
-
-                            <div class="flex items-center mb-4">
-                                <span class="text-yellow-400 text-lg mr-2">
-                                    ⭐⭐⭐⭐✨
-                                </span>
-                                <span class="text-sm text-gray-500">4.5/5</span>
-                            </div>
 
                             <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
                                 <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>

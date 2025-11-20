@@ -55,8 +55,8 @@ return new class extends Migration
 
         Schema::create('Resenas', function (Blueprint $table) {
             $table->id();
-            $table->decimal('calificacion', 1, 1);
-            $table->string('comentario');
+            $table->integer('calificacion');
+            $table->string('comentario', 10000);
             $table->dateTime('fecha');
             $table->foreignId('usuario_id')->constrained('Usuarios');
             $table->foreignId('producto_id')->constrained('Productos');

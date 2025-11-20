@@ -76,6 +76,8 @@ Route::get('/resenas', function () {
     return view('resenas');
 });
 
+Route::post('/juegos/resenas', [ResenasController::class, 'agregarresena'])->name('juegos.agregarresena.resena');
+
 Route::get('/juegos/{id}/resenas', [ResenasController::class, 'show'])->name('juegos.resenas');
 
 // Rutas de administrador ---------------------------------------------------
@@ -111,15 +113,6 @@ Route::post('/admin/actualizarproducto', [ProductosController::class, 'actualiza
 Route::get('/admin/editarproducto/{tipo}/{id}', [ProductosController::class, 'editarproducto'])->name('admin.productos.editar');
 
 Route::post('/admin/editarproducto', [ProductosController::class, 'guardarcambios'])->name('admin.productos.guardarcambios');
-
-Route::get('/admin/auditorias', function () {
-
-    return view('admin/auditorias');
-});
-
-Route::post('/admin/auditorias', function () {
-    return view('admin/auditorias');
-});
 
 Route::get('/admin/juegos-buscar', [ProductosController::class, 'buscarjuegos'])->name('admin.juegos-buscar.buscar');
 

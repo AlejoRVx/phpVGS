@@ -81,7 +81,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2025-12-01',
             'precio' => 70000,
             'descripcion' => 'Melinoë, la princesa del inframundo, emprende una misión épica para enfrentarse a Cronos en esta secuela llena de magia oscura y acción.',
-            'imagen' => 'Hades II.jpg',
+            'imagen' => 'Hades II.gif',
         ]);
 
         Productos::create([
@@ -105,7 +105,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2022-02-25',
             'precio' => 150000,
             'descripcion' => 'Un vasto mundo abierto lleno de desafíos, jefes colosales y una historia escrita en colaboración con George R. R. Martin.',
-            'imagen' => 'Elden Ring.jpg',
+            'imagen' => 'Elden Ring.gif',
         ]);
 
         Productos::create([
@@ -117,7 +117,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2023-10-20',
             'precio' => 118000,
             'descripcion' => 'Peter Parker y Miles Morales unen fuerzas para enfrentar a nuevos villanos en una historia llena de acción y exploración en mundo abierto.',
-            'imagen' => 'Spider-Man 2.jpg',
+            'imagen' => 'Spider-Man 2.gif',
         ]);
 
         // Consolas
@@ -174,7 +174,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2000-03-04',
             'precio' => 550000,
             'descripcion' => 'La PlayStation 2 es una de las consolas más exitosas de todos los tiempos, conocida por su amplia biblioteca de juegos y su lector de DVD integrado.',
-            'imagen' => 'PlayStation 2.jpg',
+            'imagen' => 'PlayStation 2.gif',
         ]);
 
         Productos::create([

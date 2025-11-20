@@ -58,7 +58,6 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Botón de regreso -->
         <div class="mb-6">
             <a href="{{ url('/' . strtolower($producto->tipo)) . 's' }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-blue-400 hover:text-blue-300 hover:bg-gray-700 rounded-lg border-2 border-blue-400 transition duration-300 shadow-lg hover:shadow-blue-400/30">
                 <span class="mr-2 text-xl">←</span> 
@@ -77,20 +76,27 @@
                         {{ $producto->nombre }}
                     </h1>
 
-                    <div class="mb-6">
-                        <div class="flex items-center mb-3">
-                            <span class="text-yellow-400 text-2xl mr-3">
-                                ⭐⭐⭐⭐✨
-                            </span>
-                            <span class="text-xl text-gray-300">4.5/5</span>
-                            <span class="text-sm text-gray-500 ml-2">(128 reseñas)</span>
+                    @if ($producto->tipo == "Juego")
+                        <div class="mb-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-yellow-400 text-2xl mr-3">
+                                    {{ str_repeat('⭐', floor($promedioCalificacion))}}
+                                    @if($promedioCalificacion - floor($promedioCalificacion) > 0)
+                                        ✨
+                                    @endif
+                                </span>
+                                <span class="text-xl text-gray-300">{{ number_format($promedioCalificacion, 1) }}/5</span>
+                                <span class="text-sm text-gray-500 ml-2">({{ $cantidadResenas }} reseña-s)</span>
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
                     <div class="space-y-3 mb-6">
-                        <p class="text-gray-300">
-                            <span class="font-semibold text-blue-400">Género:</span> {{ $producto->genero }}
-                        </p>
+                        @if ($producto->tipo == "Juego")
+                            <p class="text-gray-300">
+                                <span class="font-semibold text-blue-400">Género:</span> {{ $producto->genero }}
+                            </p>
+                        @endif
                         <p class="text-gray-300">
                             <span class="font-semibold text-blue-400">Compañía:</span> {{ $producto->compania }}
                         </p>
@@ -130,12 +136,14 @@
                 <div class="bg-gray-800 rounded-xl shadow-2xl p-8 mb-8">
                     <h3 class="text-2xl font-semibold text-blue-400 mb-6">Deja tu reseña</h3>
                     
-                    <form action="#" method="POST">
+                    <form action="/juegos/resenas" method="POST">
+
+                        <input type="hidden" name="producto_id" value="{{ $producto->id }}">
                         @csrf
                         
                         <div class="mb-6">
-                            <label for="rating" class="block text-gray-300 font-semibold mb-3">Calificación:</label>
-                            <select name="rating" id="rating" required
+                            <label for="calificacion" class="block text-gray-300 font-semibold mb-3">Calificación:</label>
+                            <select name="calificacion" id="calificacion" required
                                 class="px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 transition duration-300">
                                 <option value="">Selecciona una calificación</option>
                                 <option value="5">⭐⭐⭐⭐⭐ - Excelente (5/5)</option>
@@ -144,13 +152,6 @@
                                 <option value="2">⭐⭐ - Regular (2/5)</option>
                                 <option value="1">⭐ - Malo (1/5)</option>
                             </select>
-                        </div>
-
-                        <div class="mb-6">
-                            <label for="titulo" class="block text-gray-300 font-semibold mb-2">Título:</label>
-                            <input type="text" name="titulo" id="titulo" required
-                                class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 transition duration-300"
-                                placeholder="Título de tu reseña...">
                         </div>
 
                         <div class="mb-6">
@@ -166,55 +167,39 @@
                     </form>
                 </div>
 
-                <div class="space-y-6">
-                    <div class="bg-gray-800 rounded-xl shadow-xl p-6 border-l-4 border-blue-400">
+                @foreach ($resenas as $resena)
+                    <div class="bg-gray-800 rounded-xl shadow-xl p-6 border-l-4 border-blue-400 mb-6">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <h4 class="text-xl font-bold text-blue-400 mb-1">¡Increíble experiencia!</h4>
-                                <p class="text-sm text-gray-500">Por <span class="text-gray-400 font-semibold">GamerPro123</span> - 15/11/2024</p>
+                                <p class="text-sm text-gray-400">
+                                    Por <span class="font-semibold text-blue-400">Usuario Anónimo</span>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ $resena->fecha->format('d/m/Y') }}
+                                </p>
                             </div>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
-                                <span class="text-sm text-gray-400 ml-2">5/5</span>
+                            
+                            <div class="flex items-center gap-2">
+                                <span class="text-yellow-400 text-xl">
+                                    {{ str_repeat('⭐', $resena->calificacion) }}
+                                </span>
+                                <span class="text-sm text-gray-400 font-semibold">
+                                    {{ $resena->calificacion }}/5
+                                </span>
                             </div>
                         </div>
                         <p class="text-gray-300 leading-relaxed">
-                            Este juego superó todas mis expectativas. La historia es cautivadora, los gráficos son impresionantes y la jugabilidad es muy fluida. Definitivamente lo recomiendo a todos los fanáticos del género.
+                            {{ $resena->comentario }} 
                         </p>
                     </div>
+                @endforeach
 
-                    <div class="bg-gray-800 rounded-xl shadow-xl p-6 border-l-4 border-purple-400">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h4 class="text-xl font-bold text-purple-400 mb-1">Muy bueno, pero con detalles</h4>
-                                <p class="text-sm text-gray-500">Por <span class="text-gray-400 font-semibold">CasualGamer</span> - 10/11/2024</p>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400 text-xl">⭐⭐⭐⭐</span>
-                                <span class="text-sm text-gray-400 ml-2">4/5</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-300 leading-relaxed">
-                            Me encantó el juego en general, aunque encontré algunos bugs menores. La jugabilidad es excelente y tiene mucho contenido para explorar. Espero que saquen más actualizaciones pronto.
-                        </p>
+                @if($resenas->isEmpty())
+                    <div class="bg-gray-800 rounded-xl shadow-xl p-8 text-center">
+                        <p class="text-gray-400 text-lg">No hay reseñas todavía</p>
+                        <p class="text-gray-500 text-sm mt-2">¡Sé el primero en dejar una reseña!</p>
                     </div>
-
-                    <div class="bg-gray-800 rounded-xl shadow-xl p-6 border-l-4 border-green-400">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h4 class="text-xl font-bold text-green-400 mb-1">¡Una joya!</h4>
-                                <p class="text-sm text-gray-500">Por <span class="text-gray-400 font-semibold">RetroFan88</span> - 05/11/2024</p>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
-                                <span class="text-sm text-gray-400 ml-2">5/5</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-300 leading-relaxed">
-                            No puedo dejar de jugarlo. La banda sonora es espectacular y la historia me tiene completamente enganchado. Vale cada centavo invertido.
-                        </p>
-                    </div>
-                </div>
+                @endif
             </section>
         @endif
     </main>

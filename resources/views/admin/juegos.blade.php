@@ -39,7 +39,6 @@
                     <a href="/admin/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/admin/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
                     <a href="/admin/listausuarios" class="text-gray-300 hover:text-blue-400 transition duration-300">Usuarios</a>
-                    <a href="/admin/auditorias" class="text-gray-300 hover:text-blue-400 transition duration-300">Auditorias</a>
                     <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
@@ -85,13 +84,6 @@
                                 <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
                                 <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
                             </p>
-
-                            <div class="flex items-center mb-4">
-                                <span class="text-yellow-400 text-lg mr-2">
-                                    ⭐⭐⭐⭐✨
-                                </span>
-                                <span class="text-sm text-gray-500">4.5/5</span>
-                            </div>
 
                             <p class="text-sm text-gray-400 mb-4">{{ $producto->descripcion }}</p>
 
