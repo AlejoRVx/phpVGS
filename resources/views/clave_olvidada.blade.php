@@ -25,6 +25,14 @@
 </head>
 <body class="text-white">
     <div class="max-w-md mx-auto bg-gray-900 p-8 rounded-lg shadow-2xl border border-gray-700">
+
+        <div class="mb-6">
+            <a href="/" class="inline-flex items-center px-4 py-2 bg-gray-800 text-blue-400 hover:text-blue-300 hover:bg-gray-700 rounded-lg border-2 border-blue-400 transition duration-300 shadow-lg hover:shadow-blue-400/30">
+                <span class="mr-2 text-xl">←</span> 
+                <span class="font-semibold">Volver atrás</span>
+            </a>
+        </div>
+
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Recupera tu clave</h1>
         </div>
@@ -36,13 +44,18 @@
                 <input type="email" id="correo" name="correo" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white">
             </div>
             <div>
-                <label for="contrasena" class="block text-sm font-medium text-gray-300">contraseña nueva</label>
-                <input type="password" id="contrasena" name="contrasena" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white">
+                <label for="contrasena1" class="block text-sm font-medium text-gray-300">contraseña nueva</label>
+                <input type="password" id="contrasena1" name="contrasena1" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"required>
             </div>
             <div>
-                <label for="contrasena" class="block text-sm font-medium text-gray-300">Confirmar contraseña</label>
-                <input type="password" id="contrasena" name="contrasena" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white">
+                <label for="contrasena2" class="block text-sm font-medium text-gray-300">Confirmar contraseña</label>
+                <input type="password" id="contrasena2" name="contrasena2" required class="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"required>
             </div>
+            @if ($errors->any())
+                <div class="block text-sm font-medium text-red-500" role="alert">
+                    {{ $errors->first() }}
+                </div>
+            @endif
             <button type="submit" class="w-full neon-blue text-black font-bold py-2 px-4 rounded-md transition duration-300">Guardar cambios</button>
         </form>
     </div>

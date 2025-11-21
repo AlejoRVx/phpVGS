@@ -32,8 +32,8 @@
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>

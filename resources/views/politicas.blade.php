@@ -21,7 +21,6 @@
     </style>
 </head>
 <body class="text-white">
-    <!-- Header -->
     <header class="bg-gray-900 border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
@@ -33,8 +32,8 @@
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>
@@ -62,13 +61,12 @@
             <p class="font-medium text-lg text-white">1.1 Información proporcionada por el Usuario</p>
             <ul class="list-disc list-inside space-y-1 text-gray-300 ml-4">
                 <li>Datos de Registro: Nombre, dirección de correo electrónico, contraseña (encriptada).</li>
-                <li>Datos de Compra: Nombre completo, dirección de envío, número de teléfono.</li>
+                <li>Datos de Compra: Nombre completo, productos, cantidad y precio</li>
                 <li>Comunicaciones: Información contenida en correspondencia con nuestro servicio de atención al cliente.</li>
             </ul>
 
             <p class="font-medium text-lg text-white">1.2 Información de Uso y Seguimiento</p>
             <ul class="list-disc list-inside space-y-1 text-gray-300 ml-4">
-                <li>Datos Técnicos: Dirección IP, tipo de navegador, sistema operativo, páginas visitadas.</li>
                 <li>Cookies: Utilizamos cookies y tecnologías similares para rastrear la actividad en nuestro servicio y mantener la sesión activa (ver Sección 4).</li>
             </ul>
         </div>
@@ -111,13 +109,13 @@
 
         <h3 class="text-xl font-semibold text-purple-400 mb-3">Contacto para Asuntos de Privacidad</h3>
         <p class="text-gray-300">
-            Si tiene preguntas sobre esta Política de Privacidad o desea ejercer sus derechos ARCO, por favor contáctenos a:
+            Si tiene preguntas sobre esta Política de Privacidad o desea ejercer sus derechos como usuario, por favor contáctenos a:
             <br>
             <span class="font-medium">Responsable:</span> Departamento de Privacidad VGStorm
             <br>
             <span class="font-medium">Correo electrónico:</span> privacidad@vgstorm.com
             <br>
-            <span class="font-medium">Dirección:</span> Av. Gaming #101, Col. Digital, CP 00000
+            <span class="font-medium">Dirección:</span> Av. Gaming #101, Col. Digital, CP 21310, Medellin.
         </p>
 
     </section>

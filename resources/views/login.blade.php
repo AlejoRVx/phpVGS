@@ -44,6 +44,11 @@
                     {{ $errors->first() }}
                 </div>
             @endif
+            @if (session('success'))
+                <div class="text-green-400 px-4 py-3 rounded-lg mb-4" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <input id="remember" name="remember" type="checkbox" value="1" {{ old('remember') ? 'checked' : '' }} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">

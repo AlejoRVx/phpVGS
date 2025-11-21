@@ -50,8 +50,8 @@
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>
@@ -113,10 +113,9 @@
                         <span class="text-4xl font-bold text-purple-400">
                             ${{ number_format($producto->precio, 2) }}
                         </span>
-                        <form action="{{ route('productos.agregar') }}" method="POST">
+                        <form action="{{ route('pedidos.agregar', $producto->id) }}" method="POST" >
                             @csrf
-                            <input type="hidden" name="producto_id" value="{{ $producto->id }}">
-                            <button class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50 text-lg">
+                            <button class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50 text-lg" type="submit">
                                 Añadir al carrito 🛒
                             </button>
                         </form>

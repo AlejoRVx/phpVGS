@@ -32,8 +32,8 @@
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>
@@ -51,7 +51,7 @@
 
     <section class="bg-gray-900 p-6 sm:p-10 rounded-xl shadow-2xl text-left">
         <p class="text-base text-gray-300 mb-8">
-            VGStorm es una tienda en línea dedicada a la venta de videojuegos, consolas, accesorios y productos relacionados con el sector gaming. Al acceder o utilizar nuestro sitio web (https://www.vgstorm.com), usted acepta estar sujeto a los presentes Términos y Condiciones.
+            VGStorm es una tienda en línea dedicada a la venta de videojuegos, consolas relacionados con el sector gaming, usted acepta estar sujeto a los presentes Términos y Condiciones.
         </p>
         
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">1. Aceptación de los Términos</h3>
@@ -81,10 +81,10 @@
             <p class="text-gray-300 ml-4">La confirmación de un pedido no implica la aceptación de la venta hasta que VGStorm haya confirmado la disponibilidad del producto y el pago haya sido verificado.</p>
 
             <p class="font-medium text-lg text-white">3.2 Precios y Moneda</p>
-            <p class="text-gray-300 ml-4">Todos los precios se muestran en Pesos Colombianos e incluyen el Impuesto al Valor Agregado (IVA) si aplica. VGStorm se reserva el derecho de modificar los precios en cualquier momento sin previo aviso. En caso de error manifiesto en el precio, el pedido será cancelado.</p>
+            <p class="text-gray-300 ml-4">Todos los precios se muestran en Pesos Colombianos. En caso de error manifiesto en el precio, el pedido será cancelado.</p>
 
             <p class="font-medium text-lg text-white">3.3 Formas de Pago</p>
-            <p class="text-gray-300 ml-4">Aceptamos pagos a través de Tarjetas de Crédito/Débito (Visa, Mastercard), PayPal. El procesamiento de pagos es manejado por plataformas de terceros seguras.</p>
+            <p class="text-gray-300 ml-4">Aceptamos pagos a través de Tarjetas de Crédito/Débito (Visa, Mastercard), PayPal.</p>
         </div>
 
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">4. Envíos y Entregas</h3>
@@ -99,10 +99,10 @@
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">5. Política de Devoluciones y Garantías</h3>
         <div class="space-y-4 mb-6">
             <p class="font-medium text-lg text-white">5.1 Devoluciones</p>
-            <p class="text-gray-300 ml-4">Solo se aceptarán devoluciones de productos defectuosos o incorrectos, o en el caso de retracto dentro de los 15 días siguientes a la recepción, siempre y cuando el producto se encuentre en su empaque original y sin abrir (para videojuegos y software).</p>
+            <p class="text-gray-300 ml-4">Solo se aceptarán devoluciones de productos defectuosos o incorrectos, o en el caso de retracto dentro de los 15 días siguientes a la recepción, siempre y cuando el producto se encuentre en su empaque original y sin abrir (para videojuegos y consolas).</p>
 
             <p class="font-medium text-lg text-white">5.2 Garantía</p>
-            <p class="text-gray-300 ml-4">La garantía aplicable a los productos de hardware (consolas, accesorios) es la ofrecida por el fabricante. VGStorm actuará como intermediario para facilitar la gestión de la garantía, pero no es la responsable final.</p>
+            <p class="text-gray-300 ml-4">La garantía aplicable a los productos de hardware como consolas, es la ofrecida por el fabricante. VGStorm actuará como intermediario para facilitar la gestión de la garantía, pero no es la responsable final.</p>
         </div>
 
         <h3 class="text-2xl font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-1">6. Propiedad Intelectual</h3>
@@ -120,7 +120,7 @@
             <br>
             <span class="font-medium">Correo electrónico:</span> soporte@vgstorm.com
             <br>
-            <span class="font-medium">Dirección:</span> Av. Gaming #101, Col. Digital, CP 00000
+            <span class="font-medium">Dirección:</span> Av. Gaming #101, Col. Digital, CP 21310, Medellin.
         </p>
 
     </section>

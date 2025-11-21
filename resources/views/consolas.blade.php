@@ -32,8 +32,8 @@
                     <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
                     <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
                     <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/carrito" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
+                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
                 </nav>
             </div>
         </div>
@@ -80,9 +80,12 @@
                             <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
                                 <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
                                     
-                                <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
-                                    Añadir 🛒
-                                </button>
+                                <form action="{{ route('pedidos.agregar', $producto->id) }}" method="POST" >
+                                    @csrf
+                                    <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50" type="submit">
+                                        Añadir 🛒
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

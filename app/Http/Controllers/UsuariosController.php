@@ -67,9 +67,13 @@ class UsuariosController extends Controller
 
     public function cerrarsesion(Request $request)
     {
+        session()->forget('pedidos');
+
         Auth::logout();
+        $request->session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
         return redirect('/');
     }
 
@@ -115,4 +119,29 @@ class UsuariosController extends Controller
 
         return redirect('/admin/listausuarios')->with('success', 'Usuario actualizado correctamente');
     }
+
+    public function clave_olvidada(Request $request)
+    {
+        return view('clave_olvidada');
+    }
+
+    public function validar_clave_olvidada(Request $request)
+{
+    $request->validate([
+        'correo' => 'required|email|exists:usuarios,correo',
+        'contrasena1' => 'required|min:6',
+        'contrasena2' => 'required|min:6|same:contrasena1',
+    ], [
+        'correo.exists' => 'Este correo no está registrado en el sistema.',
+        'contrasena1.min' => 'La contraseña debe tener al menos 6 caracteres.',
+        'contrasena2.min' => 'La confirmación debe tener al menos 6 caracteres.',
+        'contrasena2.same' => 'Las contraseñas no coinciden.',
+    ]);
+
+    $usuario = Usuarios::where('correo', $request->correo)->first();
+    $usuario->contrasena = Hash::make($request->contrasena1);
+    $usuario->save();
+
+    return redirect('/')->with('success', 'Contraseña actualizada correctamente.');
+}
 }
