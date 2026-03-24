@@ -1,108 +1,206 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
-    <title>Consolas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .neon-blue {
-            background-color: #00efffff;
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 4px #00efffff;
-        }
-        .neon-blue:hover {
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 8px #00efffff;
-        }
-        body {
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-        }
-    </style>
-</head>
-<body class="text-white">
-    <header class="bg-gray-900 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
-                    <a href="/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+@extends('layouts.app')
+
+@section('title', 'Consolas')
+
+@section('search-bar')
+@endsection
+
+@section('content')
+
+    <section id="catalogo-consolas" class="py-6">
+        <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-8 text-center">
+            🕹️ Catálogo de consolas Destacadas
+        </h2>
+
+        @include('partials._filtros')
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            @if($productos->isEmpty())
+                <div class="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 bg-gray-800/30 rounded-3xl border-2 border-dashed border-purple-900/50">
+                    <div class="bg-gray-900 p-6 rounded-full mb-6 shadow-xl shadow-purple-500/10">
+                       <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    
+                    <h3 class="text-3xl font-bold text-white mb-2">¡Vaya! No encontramos esa consola</h3>
+                    
+                    <p class="text-gray-400 text-center max-w-md mb-8 px-6 text-lg">
+                        {{ request('q') 
+                            ? 'Parece que "' . request('q') . '" no está en nuestra biblioteca. Intenta con otro nombre.' 
+                            : 'Parece que aún no tenemos consolas en esta categoría.' 
+                        }}
+                    </p>
+
+                    @if(request('q'))
+                        <a href="{{ route('productos.consolas') }}" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-full transition duration-300 transform hover:scale-105 shadow-lg shadow-purple-600/30">
+                            🔄 Explorar todo el catálogo
+                        </a>
+                    @endif
                 </div>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
-                    <a href="/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
-                    <a href="/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/pedidos" class="text-gray-300 hover:text-blue-400 transition duration-300"> 🛒 </a>
-                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+            @endif
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <section class="text-center mb-12">
-            <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">Nuestras consolas</h2>
-        </section>
-
-        <section id="barra-busqueda" class="mb-12">
-            <form action="{{ route('consolas-buscar.buscar') }}" method="GET" class="max-w-3xl mx-auto flex">
-                <input type="search" name="q" placeholder="Buscar por nombre o compañía..." class="w-full px-4 text-white bg-gray-900 rounded-l-lg border-2 border-r-0 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg focus:shadow-blue-400/30 placeholder-gray-400 transition duration-300">
-                <button type="submit" class="px-5 bg-purple-800 text-white font-semibold rounded-r-lg hover:bg-purple-600 transition duration-300 flex items-center shadow-md shadow-purple-600/20">
-                    🔎 Buscar
-                </button>
-            </form>
-        </section>
-
-        <hr class="border-t-2 border-gray-700 mt-12 mb-8">
-
-        <section id="catalogo-juegos" class="py-6">
-            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-8 text-center">
-                🕹️ Catálogo de consolas Destacadas
-            </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach ($productos as $producto)
-                    <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50 flex flex-col">
-                        <a href="/juegos/{{ $producto->id }}/resenas">
-                            <img class="w-full h-48 object-cover object-center" src="{{ asset('img/' . $producto->imagen) }}" alt="{{ $producto->nombre }}">
+            @foreach ($productos as $producto)
+                <div class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden transition duration-200 transform hover:scale-[1.02] hover:shadow-blue-500/50 flex flex-col">
+                    <a href="{{ route('productos.resenas', ['id' => $producto->id]) }}">
+                        <img class="w-full h-48 object-cover object-center" 
+                            src="{{ str_starts_with($producto->imagen, 'http') ? $producto->imagen : asset('img/' . $producto->imagen) }}" 
+                            alt="{{ $producto->nombre }}">
+                    </a>
+                        
+                    <div class="p-6 flex flex-col flex-grow">
+                        <a href="/consolas/{{ $producto->id }}/resenas">
+                            <h3 class="text-xl font-bold text-blue-400 mb-2 hover:text-blue-300 transition">{{ $producto->nombre }}</h3>
                         </a>
                             
-                        <div class="p-6 flex flex-col flex-grow">
-                            <a href="/juegos/{{ $producto->id }}/resenas">
-                                <h3 class="text-xl font-bold text-blue-400 mb-2 hover:text-blue-300 transition">{{ $producto->nombre }}</h3>
-                            </a>
-                                
-                            <p class="text-sm text-gray-400 mb-3">
-                                <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
-                                <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
-                            </p>
+                        <p class="text-sm text-gray-400 mb-3">
+                            <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
+                            <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
+                        </p>
 
-                            <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
-                                <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
-                                    
-                                <form action="{{ route('pedidos.agregar', $producto->id) }}" method="POST" >
-                                    @csrf
-                                    <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50" type="submit">
-                                        Añadir 🛒
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
+                            <span class="text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
+                                
+                            <form class="add-to-cart-form" data-product-id="{{ $producto->id }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500 shadow-lg shadow-purple-600/50">
+                                    Añadir 🛒
+                                </button>
+                            </form>
                         </div>
                     </div>
-                @endforeach
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-900 border-t border-gray-700 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="text-center">
-                <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
-                <div class="mt-4">
-                    <a href="/terminos-y-condiciones" class="text-sm text-gray-400 hover:text-gray-300">Terminos y condiciones</a> | <a href="/politicas" class="text-sm text-gray-400 hover:text-gray-300">Politicas de privacidad</a>
                 </div>
-            </div>
+            @endforeach
         </div>
-    </footer>
-</body>
-</html>
+    </section>
+
+@endsection
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function showToast(message, type = 'success') {
+            const container = $('#toast-container');
+            let bgColor = type === 'success' ? 'bg-purple-600' : 'bg-red-600';
+            let icon = type === 'success' ? '✅' : '❌';
+
+            const toastHtml = `
+                <div class="toast ${bgColor} text-white p-4 rounded-lg shadow-2xl transition duration-500 transform -translate-y-full opacity-0 max-w-sm" style="min-width: 300px;">
+                    <p class="font-semibold">${icon} ${message}</p>
+                </div>
+            `;
+
+            const newToast = $(toastHtml).appendTo(container);
+            setTimeout(() => {
+                newToast.removeClass('-translate-y-full opacity-0').addClass('translate-y-0 opacity-100');
+            }, 10);
+
+            setTimeout(() => {
+                newToast.removeClass('translate-y-0 opacity-100').addClass('-translate-y-full opacity-0');
+                newToast.on('transitionend', function() { newToast.remove(); });
+            }, 2600);
+        }
+
+        $(document).ready(function() {
+            var timer = null;
+            const resultsContainer = $('#search-results-container');
+
+            $('#search-input').on('keyup', function() {
+                var query = $(this).val();
+                
+                clearTimeout(timer); 
+
+                if (query.length < 1) {
+                    resultsContainer.addClass('hidden').empty();
+                    return;
+                }
+
+                timer = setTimeout(function() {
+                    $.ajax({
+                        url: '{{ route('productos.buscarconsolas') }}', 
+                        method: 'GET',
+                        data: { q: query },
+                        beforeSend: function() {
+                            resultsContainer.removeClass('hidden').html(
+                                '<div class="p-4 text-center text-purple-400 font-medium">Buscando...</div>'
+                            );
+                        },
+                        success: function(response) {
+                            if (response.html && response.html.trim() !== "") {
+                                resultsContainer.removeClass('hidden').html(response.html);
+                            } else {
+                                resultsContainer.removeClass('hidden').html(
+                                    '<div class="p-4 text-center text-gray-400 italic">No se encontraron resultados</div>'
+                                );
+                            }
+                        },
+                        error: function() {
+                            resultsContainer.removeClass('hidden').html(
+                                '<div class="p-4 text-center text-red-400">Error en la búsqueda</div>'
+                            );
+                        }
+                    });
+                }, 300);
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.group').length) {
+                    resultsContainer.addClass('hidden');
+                }
+            });
+
+            $(document).on('submit', '.add-to-cart-form', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var productId = form.data('product-id');
+                var url = '{{ route('pedidos.agregar', ['id' => '__id__']) }}'.replace('__id__', productId);
+                var button = form.find('button[type="submit"]');
+
+                button.prop('disabled', true).html('...');
+                
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        showToast(response.message || 'Producto añadido', 'success');
+                    },
+                    error: function() {
+                        showToast('Inicia sesión para comprar', 'error');
+                    },
+                    complete: function() {
+                        button.prop('disabled', false).html('Añadir 🛒');
+                    }
+                });
+            });
+        });
+
+        (function() {
+            var filtroTimer = null;
+
+            function aplicarFiltros() {
+                var params = new URLSearchParams(window.location.search);
+
+                var orden = $('#filtro-orden').val();
+                var precioMin = $('#filtro-precio-min').val();
+                var precioMax = $('#filtro-precio-max').val();
+
+                if (orden)     params.set('orden', orden);       else params.delete('orden');
+                if (precioMin) params.set('precio_min', precioMin); else params.delete('precio_min');
+                if (precioMax) params.set('precio_max', precioMax); else params.delete('precio_max');
+
+                window.location.href = window.location.pathname + '?' + params.toString();
+            }
+
+            $('#filtro-orden').on('change', function() {
+                aplicarFiltros();
+            });
+
+            $('#filtro-precio-min, #filtro-precio-max').on('input', function() {
+                clearTimeout(filtroTimer);
+                filtroTimer = setTimeout(aplicarFiltros, 600);
+            });
+        })();
+    </script>
+@endpush

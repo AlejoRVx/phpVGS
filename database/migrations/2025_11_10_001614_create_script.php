@@ -25,7 +25,9 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('direccion');
             $table->string('telefono');
-            $table->foreignId('rol_id')->constrained('Roles');
+            $table->foreignId('rol_id')
+                    ->constrained('Roles')
+                    ->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -58,8 +60,12 @@ return new class extends Migration
             $table->integer('calificacion');
             $table->string('comentario', 10000);
             $table->dateTime('fecha');
-            $table->foreignId('usuario_id')->constrained('Usuarios');
-            $table->foreignId('producto_id')->constrained('Productos');
+            $table->foreignId('usuario_id')
+                    ->constrained('Usuarios')
+                    ->onDelete('cascade');
+            $table->foreignId('producto_id')
+                    ->constrained('Productos')
+                    ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -67,7 +73,9 @@ return new class extends Migration
             $table->id();
             $table->decimal('total', 12, 2);
             $table->boolean('estado');
-            $table->foreignId('usuario_id')->constrained('Usuarios');
+            $table->foreignId('usuario_id')
+                    ->constrained('Usuarios')
+                    ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -75,8 +83,12 @@ return new class extends Migration
             $table->id();
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 12, 2);
-            $table->foreignId('pedido_id')->constrained('Pedidos');
-            $table->foreignId('producto_id')->constrained('Productos');
+            $table->foreignId('pedido_id')
+                    ->constrained('Pedidos')
+                    ->onDelete('cascade');
+            $table->foreignId('producto_id')
+                    ->constrained('Productos')
+                    ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -85,7 +97,9 @@ return new class extends Migration
             $table->dateTime('fecha_pago');
             $table->string('metodo');
             $table->decimal('total', 12, 2);
-            $table->foreignId('pedido_id')->constrained('Pedidos');
+            $table->foreignId('pedido_id')
+                    ->constrained('Pedidos')
+                    ->onDelete('cascade');
             $table->timestamps();
         });
     }

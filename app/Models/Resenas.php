@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Usuarios;
 
 class Resenas extends Model
 {
@@ -19,4 +20,9 @@ class Resenas extends Model
     protected $casts = [
         'fecha' => 'datetime',
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class, 'usuario_id');
+    }
 }

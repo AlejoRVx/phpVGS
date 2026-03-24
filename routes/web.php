@@ -6,123 +6,91 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ResenasController;
 use App\Http\Controllers\PedidosController;
 use App\Http\Controllers\PagosController;
+use App\Http\Controllers\Admin\ProductosController as AdminProductosController;
+use App\Http\Controllers\Admin\AdminsController;
 
-// Autenticación ------------------------------------------------------------
-Route::get('/', function () {
-    return view('login');
+/*
+| Rutas de Entrada y Redirección
+*/
+Route::get('/', function () { return redirect()->route('main'); })->name('home');
+
+/*
+| Rutas Públicas
+*/
+Route::get('/main', function () { return view('main'); })->name('main');
+
+Route::post('/pedidos/guardar-pendiente', [App\Http\Controllers\PedidosController::class, 'guardarPendiente'])->name('pedidos.guardar.pendiente');
+
+Route::prefix('productos')->group(function () {
+    Route::get('/juegos', [ProductosController::class, 'listarjuegos'])->name('productos.juegos');
+    Route::get('/consolas', [ProductosController::class, 'listarconsolas'])->name('productos.consolas');
+    Route::get('/buscar-juegos', [ProductosController::class, 'buscarJuegos'])->name('productos.buscarjuegos');
+    Route::get('/buscar-consolas', [ProductosController::class, 'buscarConsolas'])->name('productos.buscarconsolas');
+    
+    Route::get('/juegos/{id}/resenas', [ResenasController::class, 'show'])->name('productos.resenas');
 });
 
-Route::post('/', [UsuariosController::class, 'login']);
-
-Route::get('/logout', [UsuariosController::class, 'cerrarsesion']);
-
-Route::get('/register', [UsuariosController::class, 'index']);
-
-Route::post('/register', [UsuariosController::class, 'register']);
-
-Route::get('/clave-olvidada', [UsuariosController::class, 'clave_olvidada']);
-
-Route::post('/clave-olvidada', [UsuariosController::class, 'validar_clave_olvidada']);
-
-// Páginas principales ------------------------------------------------------
-Route::get('/main', function () {
-    return view('main');
+/*
+| Rutas de login/registro
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () { return view('login'); })->name('login');
+    Route::post('/login', [UsuariosController::class, 'login'])->name('login.post');
+    Route::get('/register', [UsuariosController::class, 'index'])->name('register');
+    Route::post('/register', [UsuariosController::class, 'register']);
+    Route::get('/clave-olvidada', [UsuariosController::class, 'clave_olvidada'])->name('password.request');
+    Route::post('/clave-olvidada', [UsuariosController::class, 'validar_clave_olvidada']);
 });
 
-Route::post('/main', function () {
-    return view('main');
+/*
+| Rutas Protegidas para users registrados
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', [UsuariosController::class, 'cerrarsesion'])->name('logout');
+
+    Route::post('/productos/juegos/{id}/resenas', [ResenasController::class, 'agregarresena'])->name('productos.resenas.agregar');
+
+    Route::prefix('pedidos')->group(function () {
+        Route::get('/', [PedidosController::class, 'index'])->name('pedidos.index');
+        Route::post('/agregar/{id}', [PedidosController::class, 'agregar'])->name('pedidos.agregar');
+        Route::put('/{id}', [PedidosController::class, 'actualizar'])->name('pedidos.update');
+        Route::delete('/vaciar', [PedidosController::class, 'vaciar'])->name('pedidos.clear');
+        Route::delete('/{id}', [PedidosController::class, 'eliminar'])->name('pedidos.eliminar');
+    });
+
+    Route::get('/perfil', [UsuariosController::class, 'perfil'])->name('perfil');
+    Route::put('/perfil', [UsuariosController::class, 'actualizarPerfil'])->name('perfil.actualizar');
+
+    Route::get('/pagos', [PagosController::class, 'index'])->name('pagos.index');
+    Route::post('/pagar', [PagosController::class, 'pagar'])->name('pagar');
+
+    Route::get('/factura', [PagosController::class, 'factura'])->name('factura');
+
+    Route::get('/mis-pedidos', [PagosController::class, 'historial'])->name('historial');
+    Route::get('/mis-pedidos/{id}/factura', [PagosController::class, 'facturaHistorial'])->name('historial.factura');
 });
 
-// Productos (Usuario) ------------------------------------------------------
-Route::get('/juegos', [ProductosController::class, 'listarjuegosuser'])->name('productos.listarjuegosuser');
+/*
+| Administración
+*/
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    Route::get('/dashboard', [AdminsController::class, 'index'])->name('main');
 
-Route::get('/consolas', [ProductosController::class, 'listarconsolasuser'])->name('productos.listarconsolasuser');
+    Route::get('/usuarios', [UsuariosController::class, 'listarUsuarios'])->name('usuarios.index');
+    Route::get('/usuarios/{id}/editar', [UsuariosController::class, 'editarUsuario'])->name('usuarios.edit');
+    Route::post('/usuarios/{id}/editar', [UsuariosController::class, 'actualizarUsuario'])->name('usuarios.update');
+    Route::patch('/usuarios/{id}', [UsuariosController::class, 'actualizarUsuario'])->name('usuarios.update');
+    Route::delete('/usuarios/{id}', [UsuariosController::class, 'delete'])->name('usuarios.destroy');
 
-Route::get('/juegos-buscar', [ProductosController::class, 'buscarjuegos'])->name('juegos-buscar.buscar');
+    Route::resource('productos', AdminProductosController::class)->except(['show']);
 
-Route::get('/consolas-buscar', [ProductosController::class, 'buscarconsolas'])->name('consolas-buscar.buscar');
-
-// Reseñas ------------------------------------------------------------------
-Route::get('/resenas', function () {
-    return view('resenas');
+    Route::get('/productos/buscar', [AdminProductosController::class, 'search'])->name('productos.search');
+    
 });
 
-Route::post('/juegos/resenas', [ResenasController::class, 'agregarresena'])->name('juegos.agregarresena.resena');
-
-Route::get('/juegos/{id}/resenas', [ResenasController::class, 'show'])->name('juegos.resenas');
-
-// Carrito de compras (Pedidos) ---------------------------------------------
-Route::post('/pedidos/agregar/{id}', [PedidosController::class, 'agregar'])->name('pedidos.agregar');
-
-Route::get('/pedidos', [PedidosController::class, 'index'])->name('pedidos.index');
-
-Route::put('/pedidos/actualizar/{id}', [PedidosController::class, 'actualizar'])->name('pedidos.actualizar');
-
-Route::delete('/pedidos/eliminar/{id}', [PedidosController::class, 'eliminar'])->name('pedidos.eliminar');
-
-Route::delete('/pedidos/vaciar', [PedidosController::class, 'vaciar'])->name('pedidos.vaciar');
-
-// Pagos ----------------------------------------------------------
-Route::get('/pagos', [PagosController::class, 'index'])->name('pagos.index');
-
-Route::post('/pagar', [PagosController::class, 'pagar'])->name('pagar');
-
-// Páginas legales ----------------------------------------------------------
-Route::get('/politicas', function () {
-    return view('politicas');
-});
-
-Route::post('/politicas', function () {
-    return view('politicas');
-});
-
-Route::get('/terminos-y-condiciones', function () {
-    return view('terminos');
-});
-
-Route::post('/terminos-y-condiciones', function () {
-    return view('terminos');
-});
-
-// Rutas de administrador ---------------------------------------------------
-
-// Dashboard admin
-Route::get('/admin/main', function () {
-    return view('admin/main');
-});
-
-Route::post('/admin/main', function () {
-    return view('admin/main');
-});
-
-// Gestión de usuarios
-Route::get('/admin/listausuarios', [UsuariosController::class, 'listarUsuarios'])->name('admin.usuarios.lista');
-
-Route::post('/admin/listausuarios', [UsuariosController::class, 'delete'])->name('admin.usuarios.delete');
-
-Route::get('/admin/editarusuario/{id}', [UsuariosController::class, 'editarUsuario'])->name('admin.usuarios.editar');
-
-Route::post('/admin/editarusuario', [UsuariosController::class, 'actualizarUsuario'])->name('admin.usuarios.actualizar');
-
-// Gestión de productos (Juegos)
-Route::get('/admin/juegos', [ProductosController::class, 'listarjuegos'])->name('admin.productos.listarjuegos');
-
-Route::post('/admin/juegos', [ProductosController::class, 'delete'])->name('admin.productos.delete');
-
-Route::get('/admin/juegos-buscar', [ProductosController::class, 'buscarjuegos'])->name('admin.juegos-buscar.buscar');
-
-// Gestión de productos (Consolas)
-Route::get('/admin/consolas', [ProductosController::class, 'listarconsolas'])->name('admin.productos.listarconsolas');
-
-Route::post('/admin/consolas', [ProductosController::class, 'delete'])->name('admin.productos.delete');
-
-Route::get('/admin/consolas-buscar', [ProductosController::class, 'buscarconsolas'])->name('admin.consolas-buscar.buscar');
-
-// CRUD de productos
-Route::get('/admin/agregarproducto/{tipo}', [ProductosController::class, 'agregarproducto'])->name('admin.productos.agregar');
-
-Route::post('/admin/actualizarproducto', [ProductosController::class, 'actualizarproducto'])->name('admin.productos.actualizar');
-
-Route::get('/admin/editarproducto/{tipo}/{id}', [ProductosController::class, 'editarproducto'])->name('admin.productos.editar');
-
-Route::post('/admin/editarproducto', [ProductosController::class, 'guardarcambios'])->name('admin.productos.guardarcambios');
+/*
+| Páginas Estáticas
+*/
+Route::view('/politicas', 'politicas')->name('politicas');
+Route::view('/terminos', 'terminos')->name('terminos');

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Resenas;
 
 class Productos extends Model
 {
@@ -24,4 +25,14 @@ class Productos extends Model
         'fecha_lanzamiento' => 'datetime',
         'precio' => 'decimal:2',
     ];
+
+    public function resenas()
+    {
+        return $this->hasMany(Resenas::class, 'producto_id');
+    }
+
+    public function calificacionPromedio()
+    {
+        return $this->resenas()->avg('calificacion') ?? 0;
+    }
 }

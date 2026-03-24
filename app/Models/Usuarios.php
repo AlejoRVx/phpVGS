@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Resenas;
 
 class Usuarios extends Authenticatable
 {
@@ -36,5 +37,10 @@ class Usuarios extends Authenticatable
         return [
             'rol_id' => 'integer',
         ];
+    }
+
+    public function resenas()
+    {
+        return $this->hasMany(Resenas::class, 'usuario_id');
     }
 }

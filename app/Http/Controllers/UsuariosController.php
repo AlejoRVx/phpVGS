@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Usuarios; 
+use App\Http\Controllers\PedidosController;
 
 class UsuariosController extends Controller
 {
@@ -17,7 +18,7 @@ class UsuariosController extends Controller
     {
         $validatedData = $request->validate([
             'correo' => 'required|email|unique:usuarios,correo',
-            'contrasena' => 'required|min:6',
+            'contrasena' => ['required', 'min:8', 'string', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',],
             'nombre' => 'required|string|max:255',
             'direccion' => 'required|string|max:500',
             'telefono' => 'required|string|max:15',
@@ -32,7 +33,14 @@ class UsuariosController extends Controller
         $usuario->rol_id = 1;
         $usuario->save();
 
-        return redirect('/');
+        /*Permite realizar una solicitud POST al webhook para registrar el usuario en n8n
+        Http::post('http://localhost:5678/webhook-test/register-user', [
+            'nombre' => $usuario->nombre,
+            'correo' => $usuario->correo,
+        ]);
+        */
+
+        return redirect()->route('login');
     }  
 
     public function login(Request $request)
@@ -53,11 +61,22 @@ class UsuariosController extends Controller
 
             $usuario = Auth::user();
 
-            if ($usuario->rol_id == 2) {
-                return redirect()->intended('/admin/main');
+            if ($usuario->rol_id != 2) {
+                PedidosController::cargarCarritoDesdeDB();
             }
 
-            return redirect()->intended('/main');
+            if ($usuario->rol_id == 2) {
+                return redirect()->route('admin.main');
+            }
+
+            if (session()->has('pending_product_id')) {
+                $productId = session()->pull('pending_product_id');
+                $returnUrl = session()->pull('return_to', route('main'));
+
+                return redirect($returnUrl)->with('auto_add_cart', $productId);
+            }
+
+            return redirect()->route('main');
         }
         
         return back()->withErrors([
@@ -65,7 +84,7 @@ class UsuariosController extends Controller
         ])->onlyInput('correo');
     }
 
-    public function cerrarsesion(Request $request)
+   public function cerrarsesion(Request $request)
     {
         session()->forget('pedidos');
 
@@ -73,7 +92,7 @@ class UsuariosController extends Controller
         $request->session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/');
     }
 
@@ -92,7 +111,7 @@ class UsuariosController extends Controller
         $usuario = Usuarios::findOrFail($request->usuario_id);
         $usuario->delete();
 
-        return redirect('/admin/listausuarios')->with('success', 'Usuario eliminado correctamente');
+        return back()->with('success', 'Usuario eliminado correctamente');
     }
 
     public function editarUsuario($id)
@@ -117,7 +136,7 @@ class UsuariosController extends Controller
         $usuario->rol_id = $request->rol_id;
         $usuario->save();
 
-        return redirect('/admin/listausuarios')->with('success', 'Usuario actualizado correctamente');
+        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario actualizado correctamente');
     }
 
     public function clave_olvidada(Request $request)
@@ -129,12 +148,12 @@ class UsuariosController extends Controller
 {
     $request->validate([
         'correo' => 'required|email|exists:usuarios,correo',
-        'contrasena1' => 'required|min:6',
-        'contrasena2' => 'required|min:6|same:contrasena1',
+        'contrasena1' => ['required', 'min:8', 'string', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',],
+        'contrasena2' => 'required|min:8|same:contrasena1',
     ], [
         'correo.exists' => 'Este correo no está registrado en el sistema.',
-        'contrasena1.min' => 'La contraseña debe tener al menos 6 caracteres.',
-        'contrasena2.min' => 'La confirmación debe tener al menos 6 caracteres.',
+        'contrasena1.min' => 'La contraseña debe tener al menos 8 caracteres.',
+        'contrasena2.min' => 'La confirmación debe tener al menos 8 caracteres.',
         'contrasena2.same' => 'Las contraseñas no coinciden.',
     ]);
 
@@ -143,5 +162,39 @@ class UsuariosController extends Controller
     $usuario->save();
 
     return redirect('/')->with('success', 'Contraseña actualizada correctamente.');
+}
+
+public function perfil()
+{
+    $usuario = Auth::user();
+    return view('perfil', compact('usuario'));
+}
+
+public function actualizarPerfil(Request $request)
+{
+    $usuario = Auth::user();
+
+    $request->validate([
+        'nombre'    => 'required|string|max:255',
+        'direccion' => 'required|string|max:500',
+        'telefono'  => 'required|string|max:15',
+    ], [
+        'nombre.required'    => 'El nombre es obligatorio.',
+        'direccion.required' => 'La dirección es obligatoria.',
+        'telefono.required'  => 'El teléfono es obligatorio.',
+        'telefono.max'       => 'El teléfono no puede superar 15 caracteres.',
+        'correo.required'   => 'El correo es obligatorio.',
+        'correo.email'      => 'El correo debe ser una dirección válida.',
+        'correo.unique'     => 'Este correo ya está registrado.',
+    ]);
+
+    $usuario->nombre    = $request->nombre;
+    $usuario->direccion = $request->direccion;
+    $usuario->telefono  = $request->telefono;
+    $usuario->correo      = $request->correo;
+
+    $usuario->save();
+
+    return redirect()->route('perfil')->with('success', 'Perfil actualizado correctamente');
 }
 }

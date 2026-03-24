@@ -19,14 +19,15 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center">
                     <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
-                    <a href="/admin/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+                    <a href="{{ route('admin.main') }}" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
                 </div>
                 <nav class="hidden md:flex space-x-8">
-                    <a href="/admin/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
-                    <a href="/admin/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
-                    <a href="/admin/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/admin/listausuarios" class="text-gray-300 hover:text-blue-400 transition duration-300">Usuarios</a>
-                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
+                    <a href="{{ route('admin.main') }}" class="text-gray-300 hover:text-blue-400">Inicio</a>
+                    <a href="{{ route('admin.productos.index') }}" class="text-gray-300 hover:text-blue-400">Productos</a>
+                    <a href="{{ route('admin.usuarios.index') }}" class="text-gray-300 hover:text-blue-400">Usuarios</a>
+                    <a href="{{ route('logout') }}" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');"class="text-gray-300 hover:text-red-500">
+                        Cerrar sesión ⍈
+                    </a>
                 </nav>
             </div>
         </div>
@@ -44,8 +45,9 @@
                 </div>
             @endif
 
-            <form action="{{ url('/admin/editarusuario') }}" method="POST">
+            <form action="{{ route('admin.usuarios.update', $usuario->id) }}" method="POST">
                 @csrf
+
                 <input type="hidden" name="usuario_id" value="{{ $usuario->id }}">
 
                 <div class="mb-4">
@@ -93,7 +95,7 @@
                     <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 rounded transition duration-300">
                         💾 Guardar Cambios
                     </button>
-                    <a href="/admin/listausuarios" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 rounded transition duration-300 text-center">
+                    <a href="{{ route('admin.usuarios.index') }}" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-3 rounded transition duration-300 text-center">
                         ❌ Cancelar
                     </a>
                 </div>

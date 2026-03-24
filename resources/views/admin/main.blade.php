@@ -1,113 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
-    <title>Inicio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .neon-blue {
-            background-color: #00efffff;
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 4px #00efffff;
-        }
-        .neon-blue:hover {
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 8px #00efffff;
-        }
-        body {
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-        }
-    </style>
-</head>
-<body class="text-white">
-    <header class="bg-gray-900 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
-                    <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-8 w-8 mr-2">
-                    <a href="/admin/main" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</a>
+@extends('layouts.admin')
+
+@section('title', 'Dashboard - VGStorm Admin')
+
+@section('content')
+
+<div class="mb-10">
+    <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+        Panel de Control
+    </h1>
+    <p class="text-gray-400 mt-1">Bienvenido de nuevo, Admin</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+    <div class="bg-gray-900 border border-gray-700 hover:border-blue-500/50 rounded-2xl p-6 flex items-center gap-5 transition-all group">
+        <div class="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition">
+            <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+        </div>
+        <div>
+            <p class="text-xs text-gray-500 uppercase font-bold tracking-widest">Usuarios</p>
+            <p class="text-3xl font-black text-white mt-1">{{ $totalUsuarios }}</p>
+        </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-700 hover:border-purple-500/50 rounded-2xl p-6 flex items-center gap-5 transition-all group">
+        <div class="w-14 h-14 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition">
+            <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+        </div>
+        <div>
+            <p class="text-xs text-gray-500 uppercase font-bold tracking-widest">Productos</p>
+            <p class="text-3xl font-black text-white mt-1">{{ $totalProductos }}</p>
+        </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-700 hover:border-green-500/50 rounded-2xl p-6 flex items-center gap-5 transition-all group">
+        <div class="w-14 h-14 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition">
+            <svg class="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+        </div>
+        <div>
+            <p class="text-xs text-gray-500 uppercase font-bold tracking-widest">Pedidos</p>
+            <p class="text-3xl font-black text-white mt-1">{{ $totalPedidos }}</p>
+        </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-700 hover:border-yellow-500/50 rounded-2xl p-6 flex items-center gap-5 transition-all group">
+        <div class="w-14 h-14 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-yellow-500/20 transition">
+            <svg class="w-7 h-7 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <div>
+            <p class="text-xs text-gray-500 uppercase font-bold tracking-widest">Ventas totales</p>
+            <p class="text-2xl font-black text-white mt-1">${{ number_format($totalVentas, 0, ',', '.') }}</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <div class="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+            <p class="font-bold text-white">Últimos pedidos</p>
+        </div>
+        <div class="divide-y divide-gray-800">
+            @forelse($ultimosPedidos as $pedido)
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-800/40 transition">
+                <div>
+                    <p class="text-white font-semibold text-sm">
+                        #{{ str_pad($pedido->id, 6, '0', STR_PAD_LEFT) }}
+                        <span class="text-gray-400 font-normal">· {{ $pedido->nombre_usuario }}</span>
+                    </p>
+                    <p class="text-gray-500 text-xs mt-0.5">{{ $pedido->created_at->format('d/m/Y H:i') }}</p>
                 </div>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="/admin/main" class="text-gray-300 hover:text-blue-400 transition duration-300">Inicio</a>
-                    <a href="/admin/juegos" class="text-gray-300 hover:text-blue-400 transition duration-300">Juegos</a>
-                    <a href="/admin/consolas" class="text-gray-300 hover:text-blue-400 transition duration-300">Consolas</a>
-                    <a href="/admin/listausuarios" class="text-gray-300 hover:text-blue-400 transition duration-300">Usuarios</a>
-                    <a href="/logout" onclick="return confirm('¿Estás seguro que deseas cerrar sesión?');" class="text-gray-300 hover:text-red-500 transition duration-300">Cerrar sesión ⍈</a>
-                </nav>
+                <span class="text-green-400 font-bold text-sm">
+                    ${{ number_format($pedido->total, 0, ',', '.') }}
+                </span>
+            </div>
+            @empty
+            <div class="px-6 py-8 text-center text-gray-500 text-sm">
+                Aún no hay pedidos registrados.
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-700">
+            <p class="font-bold text-white">Noticias recientes</p>
+        </div>
+        <div class="divide-y divide-gray-800">
+
+            <div class="px-6 py-4 flex gap-4 items-start hover:bg-gray-800/40 transition group">
+                <img src="{{ asset('img/noticia-steam.jpg') }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-700">
+                <div>
+                    <p class="text-white text-sm font-semibold group-hover:text-blue-400 transition leading-snug">
+                        Nueva generación de Steam Hardware para 2026
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">Nov 11, 2025</p>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 flex gap-4 items-start hover:bg-gray-800/40 transition group">
+                <img src="{{ asset('img/noticia-gta.jpg') }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-700">
+                <div>
+                    <p class="text-white text-sm font-semibold group-hover:text-blue-400 transition leading-snug">
+                        Rockstar confirma estado final de GTA VI
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">Nov 7, 2025</p>
+                </div>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <section class="text-center mb-12">
-            <h2 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">Bienvenido ADMIN</h2>
-        </section>
-        <section id="seccion-noticias" class="mt-8 p-6 bg-gray-800 rounded-lg shadow-xl">
-            <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 border-b-2 border-blue-400 pb-2 mb-6">
-            🎮 Noticias Recientes de Juegos y Consolas
-            </h2>
-            <div class="space-y-6">
-                
-                <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <div class="flex items-start space-x-4 group">
-                        <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
-                            <img src="{{ asset('img/imagen1.jpg') }}" alt="Imagen Steam Hardware" class="w-full h-full object-cover rounded-md aspect-square">
-                        </div>
-                        <div class="flex-grow">
-                            <strong class="font-semibold text-lg text-gray-100 group-hover:text-blue-400 transition duration-300">
-                                Anuncian la nueva generación de hardware Steam para 2026
-                            </strong>
-                            <p class="text-gray-300 mt-1 text-sm">
-                                Se revelan Steam Machine, Steam Frame y el nuevo Steam Controller con grandes mejoras de rendimiento.
-                            </p>
-                            <span class="block text-xs text-gray-400 mt-2">(Nov 11, 2025)</span>
-                        </div>
-                    </div>
-                </div>
+</div>
 
-                <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <div class="flex items-start space-x-4 group">
-                        <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
-                            <img src="{{ asset('img/imagen2.jpg') }}" alt="Imagen GTA VI" class="w-full h-full object-cover rounded-md aspect-square">
-                        </div>
-                        <div class="flex-grow">
-                            <strong class="font-semibold text-lg text-gray-100 group-hover:text-blue-400 transition duration-300">
-                                Rockstar confirma otro retraso para GTA VI
-                            </strong>
-                            <p class="text-gray-300 mt-1 text-sm">
-                                La fecha de lanzamiento se aplaza hasta noviembre de 2026, citando la necesidad de "pulir la experiencia global".
-                            </p>
-                            <span class="block text-xs text-gray-400 mt-2">(Nov 7, 2025)</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="p-4 bg-gray-700/50 rounded-lg transition duration-300 hover:ring-2 hover:ring-blue-400">
-                    <div class="flex items-start space-x-4 group">
-                        <div class="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
-                            <img src="{{ asset('img/imagen3.jpg') }}" alt="Imagen PS Portal" class="w-full h-full object-cover rounded-md aspect-square">
-                        </div>
-                        <div class="flex-grow">
-                            <strong class="font-semibold text-lg text-gray-100 group-hover:text-blue-400 transition duration-300">
-                                La PS5 portátil (PlayStation Portal) se transforma
-                            </strong>
-                            <p class="text-gray-300 mt-1 text-sm">
-                                Sony añade funciones clave para competir con Xbox Game Pass, incluyendo juego nativo en la nube.
-                            </p>
-                            <span class="block text-xs text-gray-400 mt-2">(Nov 7, 2025)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </main>
-
-    <footer class="bg-gray-900 border-t border-gray-700 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="text-center">
-                <p class="text-gray-400">&copy; 2025 VGStorm. Derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+@endsection

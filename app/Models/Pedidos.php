@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Pedidos extends Model
 {
     protected $table = 'pedidos';
+    protected $fillable = ['usuario_id', 'total', 'estado'];
+    protected $casts = ['total' => 'decimal:2'];
+    
+    public function productos()
+    {
+        return $this->hasMany(Pedido_Productos::class, 'pedido_id');
+    }
 
-    protected $fillable = [
-        'usuario_id',
-        'total',
-        'estado',
-    ];
-
-    protected $casts = [
-        'total' => 'decimal:2',
-    ];
+    public function pago()
+    {
+        return $this->hasOne(Pagos::class, 'pedido_id');
+    }
 }
