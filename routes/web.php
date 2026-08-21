@@ -39,7 +39,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [UsuariosController::class, 'index'])->name('register');
     Route::post('/register', [UsuariosController::class, 'register']);
     Route::get('/clave-olvidada', [UsuariosController::class, 'clave_olvidada'])->name('password.request');
-    Route::post('/clave-olvidada', [UsuariosController::class, 'validar_clave_olvidada']);
+    Route::post('/clave-olvidada', [UsuariosController::class, 'validar_verificacion']);
+    Route::get('/verificacion', [UsuariosController::class, 'verificacion'])->name('verificacion');
+    Route::post('/verificacion', [UsuariosController::class, 'validar_clave_olvidada'])->name('verificacion.validar');
+    Route::get('/nueva-clave', [UsuariosController::class, 'nueva_clave'])->name('nueva_clave');
+    Route::post('/nueva-clave', [UsuariosController::class, 'actualizar_clave'])->name('nueva_clave.actualizar');
 });
 
 /*

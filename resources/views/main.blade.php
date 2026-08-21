@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="@yield('title', 'VGStorm')">
+    <meta property="og:description" content="VGStorm - Tu tienda de videojuegos en línea. Explora nuestro catálogo de juegos y consolas, encuentra ofertas exclusivas y disfruta de una experiencia de compra única.">
+    <meta property="og:image" content="https://res.cloudinary.com/dsidu0tej/image/upload/v1781156632/VGStorm_cjxm5w.png">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
     <title>@yield('title', 'VGStorm')</title>
