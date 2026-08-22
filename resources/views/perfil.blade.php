@@ -113,6 +113,49 @@
 
         </form>
     </div>
+
+    <div class="bg-gray-900 border border-red-500/30 rounded-2xl overflow-hidden mt-6">
+        <div class="px-8 py-5 border-b border-red-500/20 bg-red-500/5">
+            <p class="text-red-400 font-bold text-lg">Zona de peligro</p>
+            <p class="text-gray-400 text-sm">Elimina tu cuenta permanentemente</p>
+        </div>
+        <div class="px-8 py-6">
+            <p class="text-gray-300 text-sm mb-4">Se eliminarán todos tus datos: perfil, reseñas, pedidos y carrito. Esta acción no se puede deshacer.</p>
+            <button type="button" onclick="document.getElementById('modal-eliminar').classList.remove('hidden')"
+                    class="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95">
+                Eliminar mi cuenta
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-eliminar" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="document.getElementById('modal-eliminar').classList.add('hidden')"></div>
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">¿Eliminar cuenta?</h3>
+            <p class="text-gray-400 text-sm">Se eliminarán todos tus datos permanentemente. Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="document.getElementById('modal-eliminar').classList.add('hidden')"
+                    class="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold rounded-xl border border-gray-700 transition-all">
+                Cancelar
+            </button>
+            <form action="{{ route('perfil.eliminar') }}" method="POST" class="flex-1">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all hover:scale-105 active:scale-95">
+                    Sí, eliminar
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
 @endsection

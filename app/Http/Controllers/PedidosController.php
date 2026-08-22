@@ -2,192 +2,105 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Cart\CartManager;
 use App\Models\Productos;
-use App\Models\CarritoItem;
+use App\Services\Catalogo\CatalogoService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class PedidosController extends Controller
 {
-    public static function cargarCarritoDesdeDB()
-    {
-        $items = CarritoItem::with('producto')
-            ->where('usuario_id', Auth::id())
-            ->get();
+    public function __construct(
+        private CartManager $cart,
+        private CatalogoService $catalogo
+    ) {}
 
-        $pedidos = [];
-        foreach ($items as $item) {
-            $p = $item->producto;
-            $pedidos[$p->id] = [
-                'id'       => $p->id,
-                'nombre'   => $p->nombre,
-                'precio'   => $p->precio,
-                'cantidad' => $item->cantidad,
-                'imagen'   => $p->imagen,
-                'tipo'     => $p->tipo,
-            ];
+    public function index(): View
+    {
+        $pedidos = $this->cart->items();
+
+        if ($pedidos === [] && Auth()->check()) {
+            $this->cart->loadFromDatabase(Auth()->id());
+            $pedidos = $this->cart->items();
         }
 
-        session(['pedidos' => $pedidos]);
-        return $pedidos;
+        return view('pedido', [
+            'pedidos' => $pedidos,
+            'total' => $this->cart->total(),
+        ]);
     }
 
-    private function sincronizarSessionADB()
+    public function agregar(Request $request, int $id): JsonResponse
     {
-        $pedidos = session()->get('pedidos', []);
-        $usuarioId = Auth::id();
-
-        CarritoItem::where('usuario_id', $usuarioId)->delete();
-
-        foreach ($pedidos as $productoId => $item) {
-            CarritoItem::create([
-                'usuario_id'  => $usuarioId,
-                'producto_id' => $productoId,
-                'cantidad'    => $item['cantidad'],
-            ]);
-        }
-    }
-
-    public function agregar(Request $request, $id)
-    {
-        if (!auth()->check()) {
-            session(['pending_product_id' => $id]);
-            session(['return_to' => url()->previous()]);
+        if (! auth()->check()) {
+            session(['pending_product_id' => $id, 'return_to' => url()->previous()]);
 
             return response()->json([
-                'status'   => 'unauthenticated',
-                'message'  => 'Inicia sesión para añadir al carrito',
-                'redirect' => route('login')
+                'status' => 'unauthenticated',
+                'message' => 'Inicia sesión para añadir al carrito',
+                'redirect' => route('login'),
             ], 401);
         }
 
         $producto = Productos::findOrFail($id);
-        $pedidos  = session()->get('pedidos', []);
+        $this->cart->add($producto);
 
-        if (isset($pedidos[$id])) {
-            $pedidos[$id]['cantidad']++;
-        } else {
-            $pedidos[$id] = [
-                'id'       => $producto->id,
-                'nombre'   => $producto->nombre,
-                'precio'   => $producto->precio,
-                'cantidad' => 1,
-                'imagen'   => $producto->imagen,
-                'tipo'     => $producto->tipo,
-            ];
-        }
+        return response()->json([
+            'success' => true,
+            'message' => "¡Producto {$producto->nombre} añadido a tu carrito!",
+            'total_items' => $this->cart->totalItems(),
+        ]);
+    }
 
-        session(['pedidos' => $pedidos]);
+    public function actualizar(Request $request, int $id): JsonResponse|View
+    {
+        $cantidad = max(0, (int) $request->input('cantidad', 1));
 
-        CarritoItem::updateOrCreate(
-            ['usuario_id' => Auth::id(), 'producto_id' => $id],
-            ['cantidad'   => $pedidos[$id]['cantidad']]
-        );
-
-        $conteo_items = array_sum(array_column($pedidos, 'cantidad'));
+        $this->cart->setQuantity($id, $cantidad);
 
         if ($request->ajax() || $request->wantsJson()) {
+            $items = $this->cart->items();
+            $item = $items[$id] ?? null;
+
             return response()->json([
-                'success'     => true,
-                'message'     => '¡Producto ' . $producto->nombre . ' añadido a tu carrito!',
-                'total_items' => $conteo_items
+                'success' => true,
+                'nuevaCantidad' => $item['cantidad'] ?? 0,
+                'nuevoSubtotal' => number_format($item ? $item['precio'] * $item['cantidad'] : 0, 0, ',', '.'),
+                'nuevoTotal' => number_format($this->cart->total(), 0, ',', '.'),
             ]);
-        }
-
-        return redirect()->back()->with('success', '✓ Producto agregado al carrito');
-    }
-
-    public function index()
-    {
-        $pedidos = session()->get('pedidos', []);
-
-        if (empty($pedidos) && Auth::check()) {
-            $pedidos = self::cargarCarritoDesdeDB();
-        }
-
-        $total = 0;
-        foreach ($pedidos as $item) {
-            $total += $item['precio'] * $item['cantidad'];
-        }
-
-        return view('pedido', compact('pedidos', 'total'));
-    }
-
-    public function actualizar(Request $request, $id)
-    {
-        $pedidos  = session()->get('pedidos', []);
-        $cantidad = (int) $request->input('cantidad', 1);
-
-        if (isset($pedidos[$id])) {
-            if ($cantidad > 0) {
-                $pedidos[$id]['cantidad'] = $cantidad;
-
-                CarritoItem::where('usuario_id', Auth::id())
-                    ->where('producto_id', $id)
-                    ->update(['cantidad' => $cantidad]);
-            } else {
-                unset($pedidos[$id]);
-
-                CarritoItem::where('usuario_id', Auth::id())
-                    ->where('producto_id', $id)
-                    ->delete();
-            }
-
-            session(['pedidos' => $pedidos]);
-
-            if ($request->ajax() || $request->wantsJson()) {
-                $nuevoTotal = 0;
-                foreach ($pedidos as $item) {
-                    $nuevoTotal += $item['precio'] * $item['cantidad'];
-                }
-
-                $nuevoSubtotal = isset($pedidos[$id])
-                    ? $pedidos[$id]['precio'] * $pedidos[$id]['cantidad']
-                    : 0;
-
-                return response()->json([
-                    'success'       => true,
-                    'nuevaCantidad' => $pedidos[$id]['cantidad'] ?? 0,
-                    'nuevoSubtotal' => number_format($nuevoSubtotal, 0, ',', '.'),
-                    'nuevoTotal'    => number_format($nuevoTotal, 0, ',', '.')
-                ]);
-            }
         }
 
         return redirect()->route('pedidos.index');
     }
 
-    public function eliminar($id)
+    public function eliminar(int $id): RedirectResponse
     {
-        $pedidos = session()->get('pedidos', []);
-
-        if (isset($pedidos[$id])) {
-            unset($pedidos[$id]);
-            session(['pedidos' => $pedidos]);
-        }
-
-        CarritoItem::where('usuario_id', Auth::id())
-            ->where('producto_id', $id)
-            ->delete();
+        $this->cart->remove($id);
 
         return redirect()->route('pedidos.index')->with('success', '✓ Producto eliminado');
     }
 
-    public function vaciar()
+    public function vaciar(): RedirectResponse
     {
-        session()->forget('pedidos');
-
-        CarritoItem::where('usuario_id', Auth::id())->delete();
+        $this->cart->clear();
 
         return redirect()->route('pedidos.index')->with('success', '✓ Pedido vaciado');
     }
 
-    public function guardarPendiente(Request $request)
+    /**
+     * Guarda en sesión el producto pendiente antes de redirigir al login.
+     */
+    public function guardarPendiente(Request $request): JsonResponse
     {
+        $request->validate(['id' => 'required|integer']);
+
         session([
-            'pending_product_id' => $request->id,
-            'return_to'          => $request->url
+            'pending_product_id' => (int) $request->input('id'),
+            'return_to' => $request->input('url', route('main')),
         ]);
+
         return response()->json(['status' => 'ok']);
     }
 }

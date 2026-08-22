@@ -2,93 +2,84 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Domain\Cart\CartManager;
+use App\Http\Requests\ActualizarPerfilRequest;
+use App\Http\Requests\RegistroRequest;
 use App\Models\Usuarios;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Hash;
+use App\Services\Usuarios\RecuperacionClaveService;
+use App\Services\Usuarios\UsuarioService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\PedidosController;
+use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
 class UsuariosController extends Controller
 {
-    public function index()
+    public function __construct(
+        private UsuarioService $usuarios,
+        private RecuperacionClaveService $recuperacion,
+        private CartManager $cart
+    ) {}
+
+    // ─── Registro ───────────────────────────────────────────
+
+    public function index(): View
     {
         return view('register');
     }
 
-    public function register(Request $request)
+    public function register(RegistroRequest $request): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'correo' => 'required|email|unique:usuarios,correo',
-            'contrasena' => ['required', 'min:8', 'string', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',],
-            'nombre' => 'required|string|max:255',
-            'direccion' => 'required|string|max:500',
-            'telefono' => 'required|string|max:15',
-        ]);
+        $this->usuarios->registrar($request->validated());
 
-        $usuario = new Usuarios();
-        $usuario->correo = $validatedData['correo'];
-        $usuario->contrasena = Hash::make($validatedData['contrasena']);
-        $usuario->nombre = $validatedData['nombre'];
-        $usuario->direccion = $validatedData['direccion'];
-        $usuario->telefono = $validatedData['telefono'];
-        $usuario->rol_id = 1;
-        $usuario->save();
+        return redirect()->route('login')->with('success', '¡Registro exitoso! Ya puedes iniciar sesión.');
+    }
 
-        // Permite realizar una solicitud POST al webhook para registrar el usuario en n8n
-        Http::post('http://localhost:5678/webhook/register-user', [
-            'nombre' => $usuario->nombre,
-            'correo' => $usuario->correo,
-        ]);
-        
+    // ─── Login ──────────────────────────────────────────────
 
-        return redirect()->route('login');
-    }  
-
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
             'correo' => 'required|email',
             'contrasena' => 'required',
         ]);
 
-        $remember = $request->has('remember'); 
+        $remember = $request->boolean('remember');
 
-        if (Auth::attempt([
-            'correo' => $credentials['correo'], 
-            'password' => $credentials['contrasena'] 
+        if (! Auth::attempt([
+            'correo' => $credentials['correo'],
+            'password' => $credentials['contrasena'],
         ], $remember)) {
-
-            $request->session()->regenerate();
-
-            $usuario = Auth::user();
-
-            if ($usuario->rol_id != 2) {
-                PedidosController::cargarCarritoDesdeDB();
-            }
-
-            if ($usuario->rol_id == 2) {
-                return redirect()->route('admin.main');
-            }
-
-            if (session()->has('pending_product_id')) {
-                $productId = session()->pull('pending_product_id');
-                $returnUrl = session()->pull('return_to', route('main'));
-
-                return redirect($returnUrl)->with('auto_add_cart', $productId);
-            }
-
-            return redirect()->route('main');
+            return back()
+                ->withErrors(['correo' => 'Clave o correo inválidos. Inténtalo de nuevo.'])
+                ->onlyInput('correo');
         }
-        
-        return back()->withErrors([
-            'correo' => 'Clave o correo inválidos. Inténtalo de nuevo.',
-        ])->onlyInput('correo');
+
+        $request->session()->regenerate();
+        $usuario = Auth::user();
+
+        if ($usuario->rol_id == 2) {
+            return redirect()->route('admin.main');
+        }
+
+        $this->cart->loadFromDatabase($usuario->id);
+
+        if (session()->has('pending_product_id')) {
+            $productId = session()->pull('pending_product_id');
+            $returnUrl = session()->pull('return_to', route('main'));
+
+            return redirect($returnUrl)->with('auto_add_cart', $productId);
+        }
+
+        return redirect()->route('main');
     }
 
-   public function cerrarsesion(Request $request)
+    // ─── Logout ─────────────────────────────────────────────
+
+    public function cerrarsesion(Request $request): RedirectResponse
     {
-        session()->forget('pedidos');
+        Session::forget(CartManager::SESSION_KEY);
 
         Auth::logout();
         $request->session()->flush();
@@ -98,97 +89,41 @@ class UsuariosController extends Controller
         return redirect('/');
     }
 
-    public function listarUsuarios()
+    // ─── Perfil ─────────────────────────────────────────────
+
+    public function perfil(): View
     {
-        $usuarios = Usuarios::all();
-        return view('admin.listausuarios', compact('usuarios'));
+        return view('perfil', ['usuario' => Auth::user()]);
     }
 
-    public function delete(Request $request)
+    public function actualizarPerfil(ActualizarPerfilRequest $request): RedirectResponse
     {
-        $request->validate([
-            'usuario_id' => 'required|exists:usuarios,id'
-        ]);
-
-        $usuario = Usuarios::findOrFail($request->usuario_id);
-        $usuario->delete();
-
-        return back()->with('success', 'Usuario eliminado correctamente');
-    }
-
-    public function editarUsuario($id)
-    {
-        $usuario = Usuarios::findOrFail($id);
-        return view('admin.editarusuario', compact('usuario'));
-    }
-
-    public function actualizarUsuario(Request $request)
-    {
-        $request->validate([
-            'usuario_id' => 'required|exists:usuarios,id',
-            'nombre' => 'required|string|max:255',
-            'direccion' => 'required|string|max:500',
-            'telefono' => 'required|string|max:15',
-        ]);
-
-        $usuario = Usuarios::findOrFail($request->usuario_id);
-        $usuario->nombre = $request->nombre;
-        $usuario->direccion = $request->direccion;
-        $usuario->telefono = $request->telefono;
-        $usuario->rol_id = $request->rol_id;
-        $usuario->save();
-
-        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario actualizado correctamente');
-    }
-
-    public function perfil()
-    {
-        $usuario = Auth::user();
-        return view('perfil', compact('usuario'));
-    }
-
-    public function actualizarPerfil(Request $request)
-    {
-        $usuario = Auth::user();
-
-        $request->validate([
-            'nombre'    => 'required|string|max:255',
-            'direccion' => 'required|string|max:500',
-            'telefono'  => 'required|string|max:15',
-        ], [
-            'nombre.required'    => 'El nombre es obligatorio.',
-            'direccion.required' => 'La dirección es obligatoria.',
-            'telefono.required'  => 'El teléfono es obligatorio.',
-            'telefono.max'       => 'El teléfono no puede superar 15 caracteres.',
-            'correo.required'   => 'El correo es obligatorio.',
-            'correo.email'      => 'El correo debe ser una dirección válida.',
-            'correo.unique'     => 'Este correo ya está registrado.',
-        ]);
-
-        $usuario->nombre    = $request->nombre;
-        $usuario->direccion = $request->direccion;
-        $usuario->telefono  = $request->telefono;
-        $usuario->correo      = $request->correo;
-
-        $usuario->save();
+        $this->usuarios->actualizarPerfil(Auth::user(), $request->validated());
 
         return redirect()->route('perfil')->with('success', 'Perfil actualizado correctamente');
     }
 
-    /**
-     * 1. Muestra la vista para ingresar el correo electrónico.
-     * RUTA: GET /clave-olvidada (named: password.request)
-     */
-    public function clave_olvidada()
+    public function eliminarCuenta(Request $request): RedirectResponse
+    {
+        $usuario = Auth::user();
+        $usuario->delete();
+
+        Auth::logout();
+        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Tu cuenta ha sido eliminada permanentemente.');
+    }
+
+    // ─── Clave olvidada ─────────────────────────────────────
+
+    public function clave_olvidada(): View
     {
         return view('clave_olvidada');
     }
 
-    /**
-     * 2. Procesa el correo, genera el código de 6 dígitos y llama a n8n.
-     * RUTA: POST /clave-olvidada
-     */
-    public function validar_verificacion(Request $request)
+    public function validar_verificacion(Request $request): RedirectResponse
     {
         $request->validate([
             'correo' => 'required|email|exists:usuarios,correo',
@@ -196,42 +131,16 @@ class UsuariosController extends Controller
             'correo.exists' => 'Este correo no está registrado en el sistema.',
         ]);
 
-        $usuario = Usuarios::where('correo', $request->correo)->first();
-        $codigo = $this->num_aleatorio(6);
-
-        try {
-            $respuesta = Http::post('http://localhost:5678/webhook/codigo-verificacion', [
-                'codigo' => $codigo,
-                'correo' => $usuario->correo,
-                'nombre' => $usuario->nombre,
-            ]);
-        } catch (ConnectionException $e) {
-            return back()->withErrors(['correo' => 'No se pudo establecer conexión con el servicio de verificación. Asegúrate de que esté activo.']);
-        } catch (\Exception $e) {
-            return back()->withErrors(['correo' => 'Ocurrió un error inesperado al procesar la solicitud.']);
+        if (! $this->recuperacion->solicitarCodigo($request->correo)) {
+            return back()->withErrors(['correo' => 'No se pudo enviar el código. Intenta de nuevo.']);
         }
 
-        if ($respuesta->json('codigo_enviado')) {
-            // Guardamos el código, el correo y el tiempo actual de creación en la sesión
-            session([
-                'verificacion_codigo' => $codigo,
-                'verificacion_correo' => $usuario->correo,
-                'verificacion_creado_en' => time()
-            ]);
-
-            return redirect()->route('verificacion')->with('success', 'Código de verificación enviado.');
-        }
-
-        return back()->withErrors(['correo' => 'Hubo un error al enviar el código a n8n.'])->withInput();
+        return redirect()->route('verificacion')->with('success', 'Código de verificación enviado.');
     }
 
-    /**
-     * 3. Muestra la vista de los 6 cuadritos para ingresar el código.
-     * RUTA: GET /verificacion (named: verificacion)
-     */
-    public function verificacion()
+    public function verificacion(): View|RedirectResponse
     {
-        if (!session('verificacion_codigo')) {
+        if (! $this->recuperacion->tieneSolicitudPendiente()) {
             return redirect()->route('password.request')
                 ->withErrors(['correo' => 'Debes solicitar un código de verificación primero.']);
         }
@@ -239,75 +148,48 @@ class UsuariosController extends Controller
         return view('verificacion');
     }
 
-    /**
-     * 4. Valida si el código de los 6 cuadritos es correcto y no ha expirado.
-     * RUTA: POST /verificacion (named: verificacion.validar)
-     */
-    public function validar_clave_olvidada(Request $request)
+    public function validar_clave_olvidada(Request $request): RedirectResponse
     {
-        // El input oculto en tu HTML se llama 'correo', por eso validamos 'correo'
         $request->validate([
-            'correo' => 'required|string|size:6', 
+            'correo' => 'required|string|size:6',
         ], [
             'correo.size' => 'El código de verificación debe contener 6 dígitos.',
         ]);
 
-        $codigoCorrecto = session('verificacion_codigo');
-        $correoUsuario  = session('verificacion_correo');
-        $creadoEn       = session('verificacion_creado_en');
+        $resultado = $this->recuperacion->validarCodigo($request->correo);
 
-        // Límite de tiempo: 3 minutos (600 segundos)
-        $minutosExpiracion = 180;
-
-        if (!$codigoCorrecto || !$correoUsuario || !$creadoEn) {
-            return redirect()->route('password.request')
-                ->withErrors(['correo' => 'La sesión de recuperación no es válida o expiró.']);
-        }
-
-        // Validación de tiempo transcurrido
-        if ((time() - $creadoEn) > $minutosExpiracion) {
-            session()->forget(['verificacion_codigo', 'verificacion_correo', 'verificacion_creado_en']);
-            return redirect()->route('password.request')
-                ->withErrors(['correo' => 'El código ha expirado (límite 3 minutos). Solicita uno nuevo.']);
-        }
-
-        // Si el código coincide, guardamos su propio CORREO como credencial de éxito
-        if ($request->correo === $codigoCorrecto) {
-            session(['codigo_verificado_exitosamente' => $correoUsuario]);
+        if ($resultado['ok']) {
             return redirect()->route('nueva_clave');
         }
 
-        return back()->withErrors(['correo' => 'El código de verificación ingresado es incorrecto.']);
-    }
+        $mensaje = match ($resultado['motivo'] ?? '') {
+            'sin_sesion' => 'La sesión de recuperación no es válida o expiró.',
+            'expirado' => 'El código ha expirado (límite 3 minutos). Solicita uno nuevo.',
+            default => 'El código de verificación ingresado es incorrecto.',
+        };
 
-    /**
-     * 5. Muestra la vista para escribir las nuevas contraseñas.
-     * RUTA: GET /nueva-clave (named: nueva_clave)
-     */
-    public function nueva_clave()
-    {
-        $correoAutorizado = session('codigo_verificado_exitosamente');
-        $correoUsuario = session('verificacion_correo');
-
-        // Control de seguridad estricto: deben coincidir los correos
-        if (!$correoAutorizado || !$correoUsuario || $correoAutorizado !== $correoUsuario) {
-            session()->forget(['codigo_verificado_exitosamente', 'verificacion_codigo', 'verificacion_correo']);
-            return redirect()->route('password.request')
-                ->withErrors(['correo' => 'Acceso denegado. La sesión de verificación es inválida o intentas usar otro correo.']);
+        if ($resultado['motivo'] === 'sin_sesion' || $resultado['motivo'] === 'expirado') {
+            return redirect()->route('password.request')->withErrors(['correo' => $mensaje]);
         }
 
-        // SOLUCIÓN AL ERROR GRAVE: Destruimos el pase de abordar inmediatamente al cargar la página
-        session()->forget('codigo_verificado_exitosamente');
-
-        // Enviamos el $correoUsuario a la vista para el input hidden del formulario final
-        return view('nueva_clave', compact('correoUsuario'));
+        return back()->withErrors(['correo' => $mensaje]);
     }
 
-    /**
-     * 6. Procesa el formulario final, encripta y actualiza la contraseña en la BD.
-     * RUTA: POST /nueva-clave (named: nueva_clave.actualizar)
-     */
-    public function actualizar_clave(Request $request)
+    public function nueva_clave(): View|RedirectResponse
+    {
+        $correo = session('verificacion_correo');
+
+        if ($correo && $this->recuperacion->estaAutorizado($correo)) {
+            $this->recuperacion->consumirAutorizacion();
+
+            return view('nueva_clave', ['correoUsuario' => $correo]);
+        }
+
+        return redirect()->route('password.request')
+            ->withErrors(['correo' => 'Acceso denegado. La sesión de verificación es inválida o intentas usar otro correo.']);
+    }
+
+    public function actualizar_clave(Request $request): RedirectResponse
     {
         $request->validate([
             'correo' => 'required|email',
@@ -319,38 +201,55 @@ class UsuariosController extends Controller
             'contrasena2.same' => 'Las contraseñas no coinciden.',
         ]);
 
-        $usuario = Usuarios::where('correo', $request->correo)->first();
-
-        if (!$usuario) {
-            return redirect()->route('password.request')
-                ->withErrors(['correo' => 'No se pudo encontrar el usuario asociado.']);
-        }
-
-        // Guardamos la contraseña encriptada
-        $usuario->contrasena = Hash::make($request->contrasena1);
-        $usuario->save();
-
-        // Limpieza absoluta de la sesión de recuperación
-        session()->forget([
-            'verificacion_codigo', 
-            'verificacion_correo', 
-            'verificacion_creado_en', 
-            'codigo_verificado_exitosamente'
-        ]);
+        $this->recuperacion->actualizarClave($request->correo, $request->contrasena1);
 
         return redirect()->route('login')->with('success', 'Contraseña actualizada con éxito. Ya puedes iniciar sesión.');
     }
 
-    /**
-     * Función auxiliar para generar códigos numéricos aleatorios
-     */
-    private function num_aleatorio($longitud)
+    // ─── Admin: Usuarios ────────────────────────────────────
+
+    public function listarUsuarios(): View
     {
-        $caracteres = '0123456789';
-        $numero = '';
-        for ($i = 0; $i < $longitud; $i++) {
-            $numero .= $caracteres[rand(0, strlen($caracteres) - 1)];
-        }
-        return $numero;
+        $usuarios = $this->usuarios->listarClientes();
+
+        return view('admin.listausuarios', compact('usuarios'));
+    }
+
+    public function editarUsuario(int $id): View
+    {
+        $usuario = Usuarios::findOrFail($id);
+
+        return view('admin.editarusuario', compact('usuario'));
+    }
+
+    public function actualizarUsuario(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'usuario_id' => 'required|exists:usuarios,id',
+            'nombre' => 'required|string|max:255',
+            'direccion' => 'required|string|max:500',
+            'telefono' => 'required|string|max:15',
+            'rol_id' => 'required|integer|in:1,2',
+        ]);
+
+        $this->usuarios->actualizarDesdeAdmin((int) $request->usuario_id, [
+            'nombre' => $request->nombre,
+            'direccion' => $request->direccion,
+            'telefono' => $request->telefono,
+            'rol_id' => $request->rol_id,
+        ]);
+
+        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario actualizado correctamente');
+    }
+
+    public function delete(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'usuario_id' => 'required|exists:usuarios,id',
+        ]);
+
+        $this->usuarios->eliminar((int) $request->usuario_id);
+
+        return back()->with('success', 'Usuario eliminado correctamente');
     }
 }

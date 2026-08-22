@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('tipo');
             $table->timestamps();
-            
+
         });
 
         Schema::create('Usuarios', function (Blueprint $table) {
@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('telefono');
             $table->foreignId('rol_id')
-                    ->constrained('Roles')
-                    ->onDelete('cascade');
+                ->constrained('Roles')
+                ->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -61,11 +61,11 @@ return new class extends Migration
             $table->string('comentario', 10000);
             $table->dateTime('fecha');
             $table->foreignId('usuario_id')
-                    ->constrained('Usuarios')
-                    ->onDelete('cascade');
+                ->constrained('Usuarios')
+                ->onDelete('cascade');
             $table->foreignId('producto_id')
-                    ->constrained('Productos')
-                    ->onDelete('cascade');
+                ->constrained('Productos')
+                ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -74,8 +74,8 @@ return new class extends Migration
             $table->decimal('total', 12, 2);
             $table->boolean('estado');
             $table->foreignId('usuario_id')
-                    ->constrained('Usuarios')
-                    ->onDelete('cascade');
+                ->constrained('Usuarios')
+                ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -84,11 +84,11 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->decimal('precio_unitario', 12, 2);
             $table->foreignId('pedido_id')
-                    ->constrained('Pedidos')
-                    ->onDelete('cascade');
+                ->constrained('Pedidos')
+                ->onDelete('cascade');
             $table->foreignId('producto_id')
-                    ->constrained('Productos')
-                    ->onDelete('cascade');
+                ->constrained('Productos')
+                ->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -98,11 +98,12 @@ return new class extends Migration
             $table->string('metodo');
             $table->decimal('total', 12, 2);
             $table->foreignId('pedido_id')
-                    ->constrained('Pedidos')
-                    ->onDelete('cascade');
+                ->constrained('Pedidos')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */

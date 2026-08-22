@@ -5,31 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
     <title>Registro - VGStorm</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .neon-blue {
-            background-color: #00efffff;
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 4px #00efffff;
-        }
-        .neon-blue:hover {
-            box-shadow: 0 0 0px #00efffff, 0 0 0px #00efffff, 0 0 8px #00efffff;
-        }
-        body {
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="text-white p-4">
-    
-    <div class="max-w-xl w-full mx-auto bg-gray-900 p-10 rounded-lg shadow-2xl border border-gray-700">
-        
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
+    <div class="max-w-xl w-full mx-auto bg-gray-900 p-6 sm:p-10 rounded-lg shadow-2xl border border-gray-700">
+        <a href="{{ route('main') }}" class="flex items-center gap-2 text-gray-400 hover:text-white transition mb-6 text-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Volver al inicio
+        </a>
         <div class="text-center mb-10">
             <img src="{{ asset('logo.ico') }}" alt="VGStorm Logo" class="h-16 w-20 mx-auto mb-1">
-            
             <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">VGStorm</h1>
             <p class="text-lg mt-2 text-gray-300">¡Únete a la mejor experiencia gaming!</p>
         </div>
@@ -47,7 +34,7 @@
         <form action="{{ url('/register') }}" method="POST" class="space-y-5">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="correo" class="block text-sm font-medium text-gray-300">Correo</label>
                     <input type="email" id="correo" name="correo" value="{{ old('correo') }}" required 
@@ -72,7 +59,7 @@
                     class="mt-1 block w-full px-3 py-2.5 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="direccion" class="block text-sm font-medium text-gray-300">Dirección</label>
                     <input type="text" id="direccion" name="direccion" value="{{ old('direccion') }}" required 
@@ -86,7 +73,7 @@
             </div>
 
             <button type="submit" id="btn-registrar" disabled 
-                class="w-full neon-blue text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-widest text-sm mt-4 opacity-50 cursor-not-allowed">
+                class="w-full bg-blue-500 hover:bg-blue-400 text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-widest text-sm mt-4 opacity-50 cursor-not-allowed">
                 Registrarse
             </button>
         </form>

@@ -5,17 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
     <title>Recuperar contraseña - VGStorm</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .neon-blue { background-color: #00efffff; box-shadow: 0 0 4px #00efffff; }
-        .neon-blue:hover:not(:disabled) { box-shadow: 0 0 8px #00efffff; }
-        body { background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .input-error { border-color: #ef4444 !important; }
-        .input-success { border-color: #22c55e !important; }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="text-white p-4">
-    <div class="max-w-xl w-full mx-auto bg-gray-900 p-10 rounded-lg shadow-2xl border border-gray-700">
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
+    <div class="max-w-xl w-full mx-auto bg-gray-900 p-6 sm:p-10 rounded-lg shadow-2xl border border-gray-700">
         <div class="mb-8">
             <a href="{{ url('/login') }}" class="inline-flex items-center text-sm font-semibold text-blue-400 hover:text-blue-300 transition duration-300 group">
                 <span class="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> Volver al inicio de sesión
@@ -44,7 +37,7 @@
             @endif
 
             <button type="submit" id="btn-save" disabled
-                class="w-full neon-blue text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-wider text-sm mt-4 opacity-50 cursor-not-allowed">
+                class="w-full bg-blue-500 hover:bg-blue-400 text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-wider text-sm mt-4 opacity-50 cursor-not-allowed">
                 Enviar enlace
             </button>
         </form>
@@ -60,18 +53,18 @@
             const emailValue = emailInput.value.trim();
             if (emailValue === "") {
                 errorMsg.classList.add('hidden');
-                emailInput.classList.remove('input-error', 'input-success');
+                emailInput.classList.remove('border-red-500', 'border-green-500');
                 disableButton();
             } else if (!emailRegex.test(emailValue)) {
                 errorMsg.innerText = "❌ Por favor, ingresa un correo electrónico válido.";
                 errorMsg.classList.remove('hidden');
-                emailInput.classList.add('input-error');
-                emailInput.classList.remove('input-success');
+                emailInput.classList.add('border-red-500');
+                emailInput.classList.remove('border-green-500');
                 disableButton();
             } else {
                 errorMsg.classList.add('hidden');
-                emailInput.classList.remove('input-error');
-                emailInput.classList.add('input-success');
+                emailInput.classList.remove('border-red-500');
+                emailInput.classList.add('border-green-500');
                 enableButton();
             }
         }

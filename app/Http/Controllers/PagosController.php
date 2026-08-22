@@ -2,136 +2,97 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pedidos;
-use App\Models\Pedido_Productos;
-use App\Models\Pagos;
+use App\Domain\Cart\CartManager;
+use App\Repositories\PedidoRepository;
+use App\Services\Pedidos\CheckoutService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\CarritoItem;
+use Illuminate\View\View;
 
 class PagosController extends Controller
 {
-    public function index()
-    {
-        $pedidos = session()->get('pedidos', []);
-        
-        if (empty($pedidos)) {
-            return redirect()->route('pedidos.index')->with('error', 'Tu pedido está vacío');
-        }
-        
-        $total = 0;
-        foreach ($pedidos as $item) {
-            $total += $item['precio'] * $item['cantidad'];
-        }
-        
-        return view('pagos', compact('pedidos', 'total'));
-    }
+    public function __construct(
+        private CartManager $cart,
+        private CheckoutService $checkout,
+        private PedidoRepository $pedidos
+    ) {}
 
-    public function pagar(Request $request)
+    public function index(): View|RedirectResponse
     {
-        $pedidos = session()->get('pedidos', []);
-
-        if (empty($pedidos)) {
+        if ($this->cart->isEmpty()) {
             return redirect()->route('pedidos.index')->with('error', 'Tu pedido está vacío');
         }
 
-        $total = 0;
-        foreach ($pedidos as $item) {
-            $total += $item['precio'] * $item['cantidad'];
-        }
+        $items = $this->cart->items();
 
-        $pedido = Pedidos::create([
-            'total'      => $total,
-            'estado'     => true,
-            'usuario_id' => Auth::id(),
+        return view('pagos', [
+            'pedidos' => $items,
+            'total' => $this->cart->total(),
         ]);
-
-        foreach ($pedidos as $item) {
-            Pedido_Productos::create([
-                'cantidad'        => $item['cantidad'],
-                'precio_unitario' => $item['precio'],
-                'pedido_id'       => $pedido->id,
-                'producto_id'     => $item['id'],
-            ]);
-        }
-
-        $pago = Pagos::create([
-            'fecha_pago' => now(),
-            'metodo'     => $request->input('metodo', 'Tarjeta de crédito'),
-            'total'      => $total,
-            'pedido_id'  => $pedido->id,
-        ]);
-
-        session()->forget('pedidos');
-        CarritoItem::where('usuario_id', Auth::id())->delete();
-
-        return redirect()->route('factura', ['pedido' => $pedido->id])
-            ->with('factura_data', [
-                'pedido_id' => $pedido->id,
-                'fecha'     => $pago->fecha_pago,
-                'metodo'    => $pago->metodo,
-                'total'     => $total,
-                'items'     => $pedidos,
-                'usuario'   => [
-                    'nombre'    => Auth::user()->nombre,
-                    'direccion' => Auth::user()->direccion,
-                    'telefono'  => Auth::user()->telefono,
-                ],
-            ]);
     }
 
-public function factura()
-{
-    $data = session('factura_data');
+    public function pagar(Request $request): RedirectResponse
+    {
+        if ($this->cart->isEmpty()) {
+            return redirect()->route('pedidos.index')->with('error', 'Tu pedido está vacío');
+        }
 
-    if (!$data) {
-        return redirect()->route('main');
+        $request->validate([
+            'metodo' => 'required|string|in:Tarjeta de crédito,Tarjeta de débito,PayPal,PSE',
+        ]);
+
+        $data = $this->checkout->pagar($request->input('metodo'));
+
+        return redirect()
+            ->route('factura', ['pedido' => $data['pedido_id']])
+            ->with('factura_data', $data);
     }
 
-    return view('factura', compact('data'));
-}
+    public function factura(): View|RedirectResponse
+    {
+        $data = session('factura_data');
 
-public function historial()
-{
-    $pedidos = Pedidos::with(['productos.producto', 'pago'])
-        ->where('usuario_id', Auth::id())
-        ->orderBy('created_at', 'desc')
-        ->get();
+        if (! $data) {
+            return redirect()->route('main');
+        }
 
-    return view('historial', compact('pedidos'));
-}
+        return view('factura', compact('data'));
+    }
 
-public function facturaHistorial($id)
-{
-    $pedido = Pedidos::with(['productos.producto', 'pago'])
-        ->where('usuario_id', Auth::id())
-        ->findOrFail($id);
+    public function historial(): View
+    {
+        $pedidos = $this->pedidos->historialDeUsuario(Auth::id());
 
-    $usuario = Auth::user();
+        return view('historial', compact('pedidos'));
+    }
 
-    $items = $pedido->productos->map(function ($pp) {
-        return [
-            'nombre'   => $pp->producto->nombre,
-            'precio'   => $pp->precio_unitario,
+    public function facturaHistorial(int $id): View
+    {
+        $pedido = $this->pedidos->findOrFailDelUsuario($id, Auth::id());
+        $usuario = Auth::user();
+
+        $items = $pedido->productos->map(fn ($pp) => [
+            'nombre' => $pp->producto->nombre,
+            'precio' => $pp->precio_unitario,
             'cantidad' => $pp->cantidad,
-            'imagen'   => $pp->producto->imagen,
-            'tipo'     => $pp->producto->tipo,
+            'imagen' => $pp->producto->imagen,
+            'tipo' => $pp->producto->tipo,
+        ])->toArray();
+
+        $data = [
+            'pedido_id' => $pedido->id,
+            'fecha' => $pedido->pago?->fecha_pago,
+            'metodo' => $pedido->pago?->metodo ?? 'N/A',
+            'total' => $pedido->total,
+            'items' => $items,
+            'usuario' => [
+                'nombre' => $usuario->nombre,
+                'direccion' => $usuario->direccion,
+                'telefono' => $usuario->telefono,
+            ],
         ];
-    })->toArray();
 
-    $data = [
-        'pedido_id' => $pedido->id,
-        'fecha'     => $pedido->pago->fecha_pago,
-        'metodo'    => $pedido->pago->metodo,
-        'total'     => $pedido->total,
-        'items'     => $items,
-        'usuario'   => [
-            'nombre'    => $usuario->nombre,
-            'direccion' => $usuario->direccion,
-            'telefono'  => $usuario->telefono,
-        ],
-    ];
-
-    return view('factura', compact('data'));
-}
+        return view('factura', compact('data'));
+    }
 }

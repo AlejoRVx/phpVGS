@@ -1,4 +1,4 @@
-<div class="flex flex-wrap items-center justify-end gap-3 mb-8">
+<div class="flex flex-wrap items-center gap-3 mb-8">
 
     <div class="flex items-center gap-2">
         <label class="text-sm text-gray-400 whitespace-nowrap">Ordenar por:</label>
@@ -9,15 +9,28 @@
             <option value="calificacion" {{ request('orden') == 'calificacion' ? 'selected' : '' }}>Mejor calificación</option>
             <option value="precio_asc"   {{ request('orden') == 'precio_asc'   ? 'selected' : '' }}>Precio: menor a mayor</option>
             <option value="precio_desc"  {{ request('orden') == 'precio_desc'  ? 'selected' : '' }}>Precio: mayor a menor</option>
-            <option value="fecha_lanzamiento_asc"  {{ request('orden') == 'fecha_lanzamiento_asc'  ? 'selected' : '' }}>Fecha de lanzamiento: más antigua</option>
-            <option value="fecha_lanzamiento_desc"  {{ request('orden') == 'fecha_lanzamiento_desc'  ? 'selected' : '' }}>Fecha de lanzamiento: más reciente</option>
+            <option value="fecha_lanzamiento_asc"  {{ request('orden') == 'fecha_lanzamiento_asc'  ? 'selected' : '' }}>Lanzamiento: más antigua</option>
+            <option value="fecha_lanzamiento_desc" {{ request('orden') == 'fecha_lanzamiento_desc' ? 'selected' : '' }}>Lanzamiento: más reciente</option>
         </select>
     </div>
 
-    @if(request()->hasAny(['orden']))
+    <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-400 whitespace-nowrap">Precio:</label>
+        <input type="number" id="filtro-precio-min" placeholder="Min"
+               value="{{ request('precio_min') }}"
+               class="w-20 bg-gray-800 border border-gray-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+               min="0">
+        <span class="text-gray-500">—</span>
+        <input type="number" id="filtro-precio-max" placeholder="Max"
+               value="{{ request('precio_max') }}"
+               class="w-20 bg-gray-800 border border-gray-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+               min="0">
+    </div>
+
+    @if(request()->hasAny(['orden', 'precio_min', 'precio_max']))
         <a href="{{ url()->current() }}"
            class="flex items-center gap-1 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-sm font-semibold rounded-xl transition">
-            ✕ Limpiar
+            ✕ Limpiar filtros
         </a>
     @endif
 

@@ -7,12 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Pedidos extends Model
 {
     protected $table = 'pedidos';
+
     protected $fillable = ['usuario_id', 'total', 'estado'];
+
     protected $casts = ['total' => 'decimal:2'];
-    
+
     public function productos()
     {
         return $this->hasMany(Pedido_Productos::class, 'pedido_id');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class, 'usuario_id');
     }
 
     public function pago()

@@ -4,21 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
-    <title>Recuperar contraseña - VGStorm</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .neon-blue { background-color: #00efffff; box-shadow: 0 0 4px #00efffff; }
-        .neon-blue:hover:not(:disabled) { box-shadow: 0 0 8px #00efffff; }
-        body { background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .input-error { border-color: #ef4444 !important; }
-        .input-success { border-color: #22c55e !important; }
-    </style>
+    <title>Recuperar contrasena - VGStorm</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="text-white p-4">
-    <div class="max-w-xl w-full mx-auto bg-gray-900 p-10 rounded-lg shadow-2xl border border-gray-700">
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
+    <div class="max-w-xl w-full mx-auto bg-gray-900 p-6 sm:p-10 rounded-lg shadow-2xl border border-gray-700">
         <div class="mb-8">
             <a href="{{ url('/login') }}" class="inline-flex items-center text-sm font-semibold text-blue-400 hover:text-blue-300 transition duration-300 group">
-                <span class="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> Volver al inicio de sesión
+                <span class="mr-2 transform group-hover:-translate-x-1 transition-transform">&larr;</span> Volver al inicio de sesion
             </a>
         </div>
         <div class="text-center mb-10">
@@ -31,18 +24,18 @@
             @csrf
             <input type="hidden" id="correo" name="correo" value="{{ $correoUsuario }}">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="contrasena1" class="block text-sm font-medium text-gray-300">Nueva Contraseña</label>
+                    <label for="contrasena1" class="block text-sm font-medium text-gray-300">Nueva Contrasena</label>
                     <input type="password" id="contrasena1" name="contrasena1" required 
                         class="mt-1 block w-full px-3 py-2.5 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white transition-all" 
-                        placeholder="Tu nueva contraseña">
+                        placeholder="Tu nueva contrasena">
                 </div>
                 <div>
-                    <label for="contrasena2" class="block text-sm font-medium text-gray-300">Confirmar Contraseña</label>
+                    <label for="contrasena2" class="block text-sm font-medium text-gray-300">Confirmar Contrasena</label>
                     <input type="password" id="contrasena2" name="contrasena2" required 
                         class="mt-1 block w-full px-3 py-2.5 bg-gray-800 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-white transition-all" 
-                        placeholder="Confirmar contraseña">
+                        placeholder="Confirmar contrasena">
                 </div>
             </div>
 
@@ -55,7 +48,7 @@
             @endif
 
             <button type="submit" id="btn-save" disabled
-                class="w-full neon-blue text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-wider text-sm mt-4 opacity-50 cursor-not-allowed">
+                class="w-full bg-blue-500 hover:bg-blue-400 text-black font-bold py-3 px-4 rounded-md transition duration-300 uppercase tracking-wider text-sm mt-4 opacity-50 cursor-not-allowed">
                 Guardar cambios
             </button>
         </form>
@@ -81,29 +74,29 @@
             let isValid = true;
 
             if (v1.length > 0) {
-                if (isTooShort) { message = "❌ La contraseña debe tener al menos 8 caracteres."; isValid = false; }
-                else if (!hasLowercase) { message = "❌ Debe incluir al menos una letra minúscula."; isValid = false; }
-                else if (!hasUppercase) { message = "❌ Debe incluir al menos una letra mayúscula."; isValid = false; }
-                else if (!hasNumber) { message = "❌ Debe incluir al menos un número."; isValid = false; }
+                if (isTooShort) { message = "La contrasena debe tener al menos 8 caracteres."; isValid = false; }
+                else if (!hasLowercase) { message = "Debe incluir al menos una letra minuscula."; isValid = false; }
+                else if (!hasUppercase) { message = "Debe incluir al menos una letra mayuscula."; isValid = false; }
+                else if (!hasNumber) { message = "Debe incluir al menos un numero."; isValid = false; }
             } else { isValid = false; }
 
             if (v1.length > 0) {
                 if (!isValid) {
                     errorMsg.innerText = message; errorMsg.classList.remove('hidden');
-                    pass1.classList.add('input-error'); pass1.classList.remove('input-success');
+                    pass1.classList.add('border-red-500'); pass1.classList.remove('border-green-500');
                 } else {
                     errorMsg.classList.add('hidden');
-                    pass1.classList.remove('input-error'); pass1.classList.add('input-success');
+                    pass1.classList.remove('border-red-500'); pass1.classList.add('border-green-500');
                 }
-            } else { errorMsg.classList.add('hidden'); pass1.classList.remove('input-error', 'input-success'); }
+            } else { errorMsg.classList.add('hidden'); pass1.classList.remove('border-red-500', 'border-green-500'); }
 
             if (v2.length > 0) {
-                if (passwordsMatch && isValid) { pass2.classList.add('input-success'); pass2.classList.remove('input-error'); }
+                if (passwordsMatch && isValid) { pass2.classList.add('border-green-500'); pass2.classList.remove('border-red-500'); }
                 else {
-                    if (v1 !== v2) { errorMsg.innerText = "❌ Las contraseñas no coinciden."; errorMsg.classList.remove('hidden'); }
-                    pass2.classList.add('input-error'); pass2.classList.remove('input-success');
+                    if (v1 !== v2) { errorMsg.innerText = "Las contrasenas no coinciden."; errorMsg.classList.remove('hidden'); }
+                    pass2.classList.add('border-red-500'); pass2.classList.remove('border-green-500');
                 }
-            } else { pass2.classList.remove('input-error', 'input-success'); }
+            } else { pass2.classList.remove('border-red-500', 'border-green-500'); }
 
             if (isValid && passwordsMatch) {
                 submitBtn.disabled = false; submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');

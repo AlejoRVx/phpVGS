@@ -2,85 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Catalogo\CatalogoService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Productos;
-
+use Illuminate\View\View;
 
 class ProductosController extends Controller
 {
-public function listarjuegos(Request $request)
-{
-    $productos = $this->aplicarFiltros(
-        Productos::where('tipo', 'Juego'), $request
-    );
-    return view('juegos', compact('productos'));
-}
+    public function __construct(private CatalogoService $catalogo) {}
 
-public function listarconsolas(Request $request)
-{
-    $productos = $this->aplicarFiltros(
-        Productos::where('tipo', 'Consola'), $request
-    );
-    return view('consolas', compact('productos'));
-}
+    public function listarjuegos(Request $request): View
+    {
+        $productos = $this->catalogo->juegos($this->filtros($request));
 
-private function aplicarFiltros($query, Request $request)
-{
-    $orden = $request->input('orden', 'nombre_asc');
-
-    if ($orden === 'nombre_asc') {
-        $query->orderBy('nombre', 'asc');
-    } elseif ($orden === 'nombre_desc') {
-        $query->orderBy('nombre', 'desc');
-    } elseif ($orden === 'calificacion') {
-        $query->withAvg('resenas', 'calificacion')
-            ->orderByDesc('resenas_avg_calificacion');
-    } elseif ($orden === 'precio_asc') {
-        $query->orderBy('precio', 'asc');
-    } elseif ($orden === 'precio_desc') {
-        $query->orderBy('precio', 'desc');
-    } elseif ($orden === 'fecha_lanzamiento_desc') {
-        $query->orderBy('fecha_lanzamiento', 'desc');
-    } elseif ($orden === 'fecha_lanzamiento_asc') {
-        $query->orderBy('fecha_lanzamiento', 'asc');
-    } else {
-        $query->orderBy('id', 'asc');
+        return view('juegos', compact('productos'));
     }
 
-    return $query->get();
-}
+    public function listarconsolas(Request $request): View
+    {
+        $productos = $this->catalogo->consolas($this->filtros($request));
 
-public function buscarJuegos(Request $request)
-{
-    return $this->buscar($request, 'Juego');
-}
-
-public function buscarConsolas(Request $request)
-{
-    return $this->buscar($request, 'Consola');
-}
-
-public function buscar(Request $request, $tipo)
-{
-    $query = $request->input('q');
-
-    $productos = Productos::where('tipo', $tipo)
-        ->where(function ($q) use ($query) {
-            $q->where('nombre', 'like', "%{$query}%")
-              ->orWhere('genero', 'like', "%{$query}%")
-              ->orWhere('compania', 'like', "%{$query}%");
-        })
-        ->limit(10)
-        ->get();
-
-    if ($request->ajax()) {
-        $html = view('partials.search_results', compact('productos'))->render();
-        return response()->json(['html' => $html]);
+        return view('consolas', compact('productos'));
     }
 
-    $view = $tipo === 'Juego' ? 'juegos' : 'consolas';
+    public function buscarJuegos(Request $request): JsonResponse|View
+    {
+        return $this->buscar($request, 'Juego');
+    }
 
-    return view($view, compact('productos'));
-}
+    public function buscarConsolas(Request $request): JsonResponse|View
+    {
+        return $this->buscar($request, 'Consola');
+    }
 
+    private function buscar(Request $request, string $tipo): JsonResponse
+    {
+        $request->validate(['q' => 'required|string|max:100']);
+
+        $productos = $this->catalogo->buscar($tipo, (string) $request->input('q'));
+
+        return response()->json([
+            'html' => view('partials.search_results', compact('productos'))->render(),
+        ]);
+    }
+
+    /**
+     * @return array{orden?: string, precio_min?: ?string, precio_max?: ?string}
+     */
+    private function filtros(Request $request): array
+    {
+        return [
+            'orden' => (string) $request->input('orden', 'nombre_asc'),
+            'precio_min' => $request->input('precio_min'),
+            'precio_max' => $request->input('precio_max'),
+        ];
+    }
 }

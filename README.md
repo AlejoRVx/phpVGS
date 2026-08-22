@@ -1,59 +1,210 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="public/logo.ico" alt="VGStorm Logo" width="100"></p>
+
+<h1 align="center">VGStorm</h1>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+    Tienda en línea de videojuegos y consolas desarrollada con Laravel 12.
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Descripción
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+VGStorm es una plataforma de e-commerce enfocada en la venta de videojuegos digitales y consolas. Ofrece un catálogo público con búsqueda y filtros, un carrito de compras con persistencia en base de datos, un panel de administración completo y un sistema de noticias gestionables desde el admin.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Funcionalidades principales
 
-## Learning Laravel
+**Panel de usuario:**
+- Catálogo de juegos y consolas con búsqueda en tiempo real
+- Filtros por precio y ordenamiento
+- Carrito de compras persistente (se mantiene al cerrar sesión)
+- Checkout con múltiples métodos de pago
+- Historial de pedidos y facturas
+- Sistema de reseñas y calificaciones
+- Gestión de perfil y eliminación de cuenta
+- Página principal con noticias y top de ventas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+**Panel de administración:**
+- Dashboard con métricas (usuarios, productos, pedidos, ventas)
+- CRUD de productos (juegos y consolas) con drag & drop de imágenes
+- CRUD de noticias con drag & drop de imágenes
+- Gestión de usuarios (editar rol, eliminar)
+- Últimos pedidos recientes
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Stack tecnológico
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Componente | Tecnología |
+|---|---|
+| Backend | Laravel 12.37 |
+| Frontend | Blade + Tailwind CSS v4 |
+| Build | Vite 7 |
+| Base de datos | MySQL |
+| PHP | 8.2+ |
+| Node.js | 18+ |
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Requisitos previos
 
-## Contributing
+- PHP 8.2 o superior
+- Composer
+- Node.js 18+ y npm
+- MySQL
+- n8n (opcional, para notificaciones)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Instalación
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 1. Clonar el repositorio
 
-## Security Vulnerabilities
+```bash
+git clone <url-del-repositorio>
+cd VGStorm
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Instalar dependencias
 
-## License
+```bash
+composer install
+npm install
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Configurar el entorno
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Editar el archivo `.env` con las credenciales de tu base de datos:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=vgstorm
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Crear la base de datos
+
+```sql
+CREATE DATABASE vgstorm;
+```
+
+### 5. Ejecutar migraciones
+
+```bash
+php artisan migrate
+```
+
+### 6. Ejecutar semillas
+
+```bash
+php artisan db:seed
+```
+
+### 7. Crear enlace de storage (imágenes)
+
+```bash
+php artisan storage:link
+```
+
+> **Nota:** Este paso es obligatorio para que las imágenes subidas en noticias y productos sean visibles.
+
+### 8. Correr el proyecto
+
+En una terminal:
+```bash
+php artisan serve
+```
+
+En otra terminal:
+```bash
+npm run dev
+```
+
+El proyecto estará disponible en `http://localhost:8000`.
+
+---
+
+## Estructura del proyecto
+
+```
+VGStorm/
+├── app/
+│   ├── Domain/Cart/          # Lógica de dominio del carrito
+│   ├── Http/
+│   │   ├── Controllers/      # Controllers públicos
+│   │   ├── Controllers/Admin/ # Controllers del panel admin
+│   │   ├── Middleware/        # Middleware (AdminMiddleware)
+│   │   └── Requests/         # Form Requests (validación)
+│   ├── Models/               # Modelos Eloquent
+│   ├── Repositories/         # Capa de acceso a datos
+│   └── Services/             # Lógica de negocio
+│       ├── Admin/            # Dashboard, productos admin
+│       ├── Catalogo/         # Catálogo público
+│       ├── Noticias/         # CRUD noticias
+│       ├── Pedidos/          # Checkout
+│       └── Usuarios/         # Registro, perfil, recuperación
+├── database/migrations/      # Migraciones de la BD
+├── resources/
+│   ├── css/app.css           # Estilos Tailwind v4
+│   ├── js/app.js             # JavaScript (vanilla)
+│   └── views/
+│       ├── layouts/          # Layouts (app, admin)
+│       ├── admin/            # Vistas del admin
+│       └── *.blade.php       # Vistas públicas
+└── routes/web.php            # Rutas
+```
+
+---
+
+## Arquitectura
+
+El proyecto sigue una arquitectura por capas:
+
+- **Controllers** → Delgados, delegan toda la lógica a services
+- **Services** → Contienen la lógica de negocio
+- **Repositories** → Acceso a datos y consultas
+- **Models** → Definición de tablas y relaciones
+- **FormRequests** → Validación declarativa
+- **Domain** → Lógica de dominio (carrito)
+
+---
+
+## Rutas principales
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/` | Redirige a `/main` |
+| GET | `/main` | Página principal |
+| GET | `/productos/juegos` | Catálogo de juegos |
+| GET | `/productos/consolas` | Catálogo de consolas |
+| GET | `/productos/{id}/resenas` | Detalle y reseñas |
+| GET | `/login` | Inicio de sesión |
+| GET | `/register` | Registro |
+| GET | `/perfil` | Mi perfil |
+| GET | `/pedidos` | Carrito de compras |
+| GET | `/pagos` | Checkout |
+| GET | `/mis-pedidos` | Historial de pedidos |
+| GET | `/admin/dashboard` | Panel de administración |
+| GET | `/admin/productos` | Gestión de productos |
+| GET | `/admin/noticias` | Gestión de noticias |
+| GET | `/admin/usuarios` | Gestión de usuarios |
+
+---
+
+## Usuarios de prueba
+
+Para acceder al panel de admin, necesitas un usuario con `rol_id = 2` en la tabla `usuarios`.
+
+---
+
+## Licencia
+
+Proyecto desarrollado con fines académicos.

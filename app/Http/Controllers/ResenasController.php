@@ -2,38 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\GuardarResenaRequest;
 use App\Models\Productos;
-use App\Models\Resenas;
+use App\Services\Resenas\ResenaService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ResenasController extends Controller
 {
-    public function show($id)
-    {
-        $producto = Productos::findOrFail($id);
-        $resenas = Resenas::where('producto_id', $id)->with('usuario')->orderBy('fecha', 'desc')->get();
-        $promedioCalificacion = $resenas->avg('calificacion');
-        $cantidadResenas = $resenas->count();
+    public function __construct(private ResenaService $resenas) {}
 
-        return view('resenas', compact('resenas', 'producto', 'promedioCalificacion', 'cantidadResenas'));
+    public function show(int $id): View
+    {
+        $datos = $this->resenas->datosDeProducto($id);
+
+        return view('resenas', $datos);
     }
 
-    public function agregarresena(Request $request, $id)
+    public function agregarresena(GuardarResenaRequest $request, int $id): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'calificacion' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string|max:10000',
-        ]);
+        $producto = Productos::findOrFail($id);
 
-        $resena = new Resenas();
-        $resena->producto_id = $id;
-        $resena->usuario_id = auth()->id();
-        $resena->calificacion = $validatedData['calificacion'];
-        $resena->comentario = $validatedData['comentario'];
-        $resena->fecha = now();
-        $resena->save();
+        $this->resenas->crear(
+            $producto,
+            auth()->id(),
+            $request->calificacion,
+            $request->comentario
+        );
 
-        return redirect()->route('productos.resenas', ['id' => $resena->producto_id])
+        return redirect()
+            ->route('productos.resenas', ['id' => $id])
             ->with('success', 'Reseña agregada exitosamente.');
     }
 }

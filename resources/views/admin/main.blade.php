@@ -75,7 +75,7 @@
                 <div>
                     <p class="text-white font-semibold text-sm">
                         #{{ str_pad($pedido->id, 6, '0', STR_PAD_LEFT) }}
-                        <span class="text-gray-400 font-normal">· {{ $pedido->nombre_usuario }}</span>
+                        <span class="text-gray-400 font-normal">· {{ $pedido->usuario->nombre ?? 'N/A' }}</span>
                     </p>
                     <p class="text-gray-500 text-xs mt-0.5">{{ $pedido->created_at->format('d/m/Y H:i') }}</p>
                 </div>
@@ -92,30 +92,34 @@
     </div>
 
     <div class="bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
             <p class="font-bold text-white">Noticias recientes</p>
+            <a href="{{ route('admin.noticias.index') }}" class="text-xs text-blue-400 hover:text-blue-300 font-semibold">Ver todas →</a>
         </div>
         <div class="divide-y divide-gray-800">
-
+            @forelse($noticias->take(5) as $noticia)
             <div class="px-6 py-4 flex gap-4 items-start hover:bg-gray-800/40 transition group">
-                <img src="{{ asset('img/noticia-steam.jpg') }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-700">
+                @if($noticia->imagen)
+                    <img src="{{ asset('storage/' . $noticia->imagen) }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-700">
+                @else
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0 border border-gray-700">
+                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                    </div>
+                @endif
                 <div>
                     <p class="text-white text-sm font-semibold group-hover:text-blue-400 transition leading-snug">
-                        Nueva generación de Steam Hardware para 2026
+                        {{ $noticia->titulo }}
                     </p>
-                    <p class="text-gray-500 text-xs mt-1">Nov 11, 2025</p>
+                    <p class="text-gray-500 text-xs mt-1">{{ $noticia->created_at->format('d M, Y') }}</p>
                 </div>
             </div>
-
-            <div class="px-6 py-4 flex gap-4 items-start hover:bg-gray-800/40 transition group">
-                <img src="{{ asset('img/noticia-gta.jpg') }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 border border-gray-700">
-                <div>
-                    <p class="text-white text-sm font-semibold group-hover:text-blue-400 transition leading-snug">
-                        Rockstar confirma estado final de GTA VI
-                    </p>
-                    <p class="text-gray-500 text-xs mt-1">Nov 7, 2025</p>
-                </div>
+            @empty
+            <div class="px-6 py-8 text-center text-gray-500 text-sm">
+                No hay noticias creadas aún.
             </div>
+            @endforelse
         </div>
     </div>
 
