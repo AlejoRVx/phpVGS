@@ -14,7 +14,7 @@ class ResenasController extends Controller
 
     public function show(int $id): View
     {
-        $datos = $this->resenas->datosDeProducto($id);
+        $datos = $this->resenas->datosDeProducto($id, auth()->id());
 
         return view('resenas', $datos);
     }
@@ -33,5 +33,28 @@ class ResenasController extends Controller
         return redirect()
             ->route('productos.resenas', ['id' => $id])
             ->with('success', 'Reseña agregada exitosamente.');
+    }
+
+    public function editarresena(GuardarResenaRequest $request, int $id): RedirectResponse
+    {
+        $resena = $this->resenas->obtenerResena($id, auth()->id());
+
+        $this->resenas->actualizar($resena, $request->calificacion, $request->comentario);
+
+        return redirect()
+            ->route('productos.resenas', ['id' => $resena->producto_id])
+            ->with('success', 'Reseña actualizada exitosamente.');
+    }
+
+    public function eliminarresena(int $id): RedirectResponse
+    {
+        $resena = $this->resenas->obtenerResena($id, auth()->id());
+        $productoId = $resena->producto_id;
+
+        $this->resenas->eliminar($resena);
+
+        return redirect()
+            ->route('productos.resenas', ['id' => $productoId])
+            ->with('success', 'Reseña eliminada exitosamente.');
     }
 }

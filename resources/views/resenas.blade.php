@@ -77,36 +77,6 @@
         💬 Reseñas de Usuarios
     </h2>
 
-    @auth
-        <div class="bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-8 mb-8">
-            <h3 class="text-xl sm:text-2xl font-semibold text-blue-400 mb-6">Deja tu reseña</h3>
-            <form action="{{ route('productos.resenas.agregar', $producto->id) }}" method="POST">
-                @csrf
-                <div class="mb-6">
-                    <label for="calificacion" class="block text-gray-300 font-semibold mb-3">Calificación:</label>
-                    <select name="calificacion" id="calificacion" required
-                        class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
-                        <option value="">Selecciona una calificación</option>
-                        <option value="5">⭐⭐⭐⭐⭐ - Excelente (5/5)</option>
-                        <option value="4">⭐⭐⭐⭐ - Muy bueno (4/5)</option>
-                        <option value="3">⭐⭐⭐ - Bueno (3/5)</option>
-                        <option value="2">⭐⭐ - Regular (2/5)</option>
-                        <option value="1">⭐ - Malo (1/5)</option>
-                    </select>
-                </div>
-                <div class="mb-6">
-                    <label for="comentario" class="block text-gray-300 font-semibold mb-2">Comentario:</label>
-                    <textarea name="comentario" id="comentario" rows="5" required
-                        class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
-                        placeholder="Cuéntanos qué te pareció este producto..."></textarea>
-                </div>
-                <button type="submit" class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500">
-                    Publicar Reseña 📝
-                </button>
-            </form>
-        </div>
-    @endauth
-
     @guest
         <div class="bg-gray-800/50 rounded-xl shadow-2xl p-6 sm:p-8 mb-8 border border-gray-700 text-center">
             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 flex items-center justify-center">
@@ -121,6 +91,130 @@
             </a>
         </div>
     @endguest
+
+    @auth
+        @if($miResena)
+            <div class="bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-8 mb-8 border-l-4" style="border-color: #a855f7;">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl sm:text-2xl font-semibold" style="color: #a855f7;">Tu reseña</h3>
+                    <div class="flex gap-3">
+                        <button onclick="abirEditarResena()" title="Editar reseña" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button onclick="document.getElementById('modal-eliminar-resena').classList.remove('hidden')" title="Eliminar reseña" class="text-gray-400 hover:text-red-400 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="flex items-center gap-0.5">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $miResena->calificacion)
+                                <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-yellow-400"><path d="{{ $iconEstrella }}"/></svg>
+                            @else
+                                <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-gray-600 opacity-30"><path d="{{ $iconEstrella }}"/></svg>
+                            @endif
+                        @endfor
+                    </div>
+                    <span class="text-sm text-gray-400 font-semibold">{{ $miResena->calificacion }}/5</span>
+                </div>
+                <p class="text-gray-300 leading-relaxed">{{ $miResena->comentario }}</p>
+            </div>
+
+            <div id="form-editar-resena" class="hidden bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-8 mb-8 border-l-4 border-yellow-500">
+                <h3 class="text-xl sm:text-2xl font-semibold text-yellow-400 mb-6">Editar reseña</h3>
+                <form action="{{ route('productos.resenas.editar', $miResena->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-6">
+                        <label class="block text-gray-300 font-semibold mb-3">Calificación:</label>
+                        <select name="calificacion" required
+                            class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
+                            <option value="5" {{ $miResena->calificacion == 5 ? 'selected' : '' }}>⭐⭐⭐⭐⭐ - Excelente (5/5)</option>
+                            <option value="4" {{ $miResena->calificacion == 4 ? 'selected' : '' }}>⭐⭐⭐⭐ - Muy bueno (4/5)</option>
+                            <option value="3" {{ $miResena->calificacion == 3 ? 'selected' : '' }}>⭐⭐⭐ - Bueno (3/5)</option>
+                            <option value="2" {{ $miResena->calificacion == 2 ? 'selected' : '' }}>⭐⭐ - Regular (2/5)</option>
+                            <option value="1" {{ $miResena->calificacion == 1 ? 'selected' : '' }}>⭐ - Malo (1/5)</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-300 font-semibold mb-2">Comentario:</label>
+                        <textarea name="comentario" rows="4"
+                            class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition resize-none">{{ $miResena->comentario }}</textarea>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="submit" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-white font-semibold rounded-lg transition">
+                            Guardar cambios
+                        </button>
+                        <button type="button" onclick="cerrarEditarResena()" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold rounded-lg transition">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="modal-eliminar-resena" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="document.getElementById('modal-eliminar-resena').classList.add('hidden')"></div>
+                <div class="relative bg-gray-900 border border-gray-700 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">¿Eliminar tu reseña?</h3>
+                        <p class="text-gray-400 text-sm">Esta acción no se puede deshacer. Podrás crear una nueva reseña después.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="document.getElementById('modal-eliminar-resena').classList.add('hidden')"
+                                class="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold rounded-xl border border-gray-700 transition-all">
+                            Cancelar
+                        </button>
+                        <form action="{{ route('productos.resenas.eliminar', $miResena->id) }}" method="POST" class="flex-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all">
+                                Sí, eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-8 mb-8">
+                <h3 class="text-xl sm:text-2xl font-semibold text-blue-400 mb-6">Deja tu reseña</h3>
+                <form action="{{ route('productos.resenas.agregar', $producto->id) }}" method="POST">
+                    @csrf
+                    <div class="mb-6">
+                        <label for="calificacion" class="block text-gray-300 font-semibold mb-3">Calificación:</label>
+                        <select name="calificacion" id="calificacion" required
+                            class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                            <option value="">Selecciona una calificación</option>
+                            <option value="5">⭐⭐⭐⭐⭐ - Excelente (5/5)</option>
+                            <option value="4">⭐⭐⭐⭐ - Muy bueno (4/5)</option>
+                            <option value="3">⭐⭐⭐ - Bueno (3/5)</option>
+                            <option value="2">⭐⭐ - Regular (2/5)</option>
+                            <option value="1">⭐ - Malo (1/5)</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label for="comentario" class="block text-gray-300 font-semibold mb-2">Comentario:</label>
+                        <textarea name="comentario" id="comentario" rows="5"
+                            class="w-full px-4 py-3 bg-gray-900 text-white rounded-lg border-2 border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
+                            placeholder="Cuéntanos qué te pareció este producto..."></textarea>
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg transition duration-300 hover:bg-purple-500">
+                        Publicar Reseña 📝
+                    </button>
+                </form>
+            </div>
+        @endif
+    @endauth
 
     @foreach ($resenas as $resena)
         <div class="bg-gray-800 rounded-xl shadow-xl p-4 sm:p-6 border-l-4 border-blue-400 mb-6">
@@ -154,3 +248,16 @@
     @endif
 </section>
 @endsection
+
+@push('scripts')
+<script>
+function abirEditarResena() {
+    document.getElementById('form-editar-resena').classList.remove('hidden');
+    document.getElementById('form-editar-resena').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function cerrarEditarResena() {
+    document.getElementById('form-editar-resena').classList.add('hidden');
+}
+</script>
+@endpush

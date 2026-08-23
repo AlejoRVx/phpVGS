@@ -63,6 +63,12 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/productos/juegos/{id}/resenas', [ResenasController::class, 'agregarresena'])
         ->name('productos.resenas.agregar');
 
+    Route::put('/resenas/{id}', [ResenasController::class, 'editarresena'])
+        ->name('productos.resenas.editar');
+
+    Route::delete('/resenas/{id}', [ResenasController::class, 'eliminarresena'])
+        ->name('productos.resenas.eliminar');
+
     Route::prefix('pedidos')->group(function (): void {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos.index');
         Route::post('/agregar/{id}', [PedidosController::class, 'agregar'])->name('pedidos.agregar');

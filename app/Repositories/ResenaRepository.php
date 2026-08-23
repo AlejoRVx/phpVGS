@@ -9,8 +9,6 @@ use Illuminate\Support\Collection;
 class ResenaRepository
 {
     /**
-     * Reseñas de un producto con su usuario cargado (evita N+1).
-     *
      * @return Collection<int, Resenas>
      */
     public function porProducto(int $productoId): Collection
@@ -30,5 +28,25 @@ class ResenaRepository
             'comentario' => $comentario,
             'fecha' => now(),
         ]);
+    }
+
+    public function buscarPorUsuarioYProducto(int $usuarioId, int $productoId): ?Resenas
+    {
+        return Resenas::where('usuario_id', $usuarioId)
+            ->where('producto_id', $productoId)
+            ->first();
+    }
+
+    public function actualizar(Resenas $resena, int $calificacion, string $comentario): void
+    {
+        $resena->update([
+            'calificacion' => $calificacion,
+            'comentario' => $comentario,
+        ]);
+    }
+
+    public function eliminar(Resenas $resena): void
+    {
+        $resena->delete();
     }
 }
