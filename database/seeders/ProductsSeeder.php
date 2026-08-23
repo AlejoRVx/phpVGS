@@ -81,7 +81,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2025-12-01',
             'precio' => 70000,
             'descripcion' => 'Melinoë, la princesa del inframundo, emprende una misión épica para enfrentarse a Cronos en esta secuela llena de magia oscura y acción.',
-            'imagen' => 'Hades II.gif',
+            'imagen' => 'Hades II.jpg',
         ]);
 
         Productos::create([
@@ -105,7 +105,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2022-02-25',
             'precio' => 150000,
             'descripcion' => 'Un vasto mundo abierto lleno de desafíos, jefes colosales y una historia escrita en colaboración con George R. R. Martin.',
-            'imagen' => 'Elden Ring.gif',
+            'imagen' => 'Elden Ring.jpg',
         ]);
 
         Productos::create([
@@ -117,7 +117,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2023-10-20',
             'precio' => 118000,
             'descripcion' => 'Peter Parker y Miles Morales unen fuerzas para enfrentar a nuevos villanos en una historia llena de acción y exploración en mundo abierto.',
-            'imagen' => 'Spider-Man 2.gif',
+            'imagen' => 'Spider-Man 2.jpg',
         ]);
 
         // Consolas
@@ -125,12 +125,12 @@ class ProductsSeeder extends Seeder
         Productos::create([
             'stock' => 100,
             'tipo' => 'Consola',
-            'nombre' => 'Play Station 5',
+            'nombre' => 'Play Station 5 Pro',
             'compania' => 'Sony Interactive Entertainment.',
             'fecha_lanzamiento' => '2020-11-19',
             'precio' => 3000000,
-            'descripcion' => 'La PlayStation 5 es la consola de última generación de Sony, ofreciendo gráficos 4K, tiempos de carga ultrarrápidos y una nueva experiencia de juego con el mando DualSense.',
-            'imagen' => 'Play Station 5.jpg',
+            'descripcion' => 'La PlayStation 5 Pro es la consola de última generación de Sony, ofreciendo gráficos 4K, tiempos de carga ultrarrápidos y una nueva experiencia de juego con el mando DualSense.',
+            'imagen' => 'Play Station 5 Pro.png',
         ]);
 
         Productos::create([
@@ -174,7 +174,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2000-03-04',
             'precio' => 550000,
             'descripcion' => 'La PlayStation 2 es una de las consolas más exitosas de todos los tiempos, conocida por su amplia biblioteca de juegos y su lector de DVD integrado.',
-            'imagen' => 'PlayStation 2.gif',
+            'imagen' => 'PlayStation 2.jpg',
         ]);
 
         Productos::create([
@@ -207,7 +207,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2023-06-13',
             'precio' => 2000000,
             'descripcion' => 'Consola portátil con Windows 11, pantalla 1080p a 120 Hz y chip AMD Z1 Extreme.',
-            'imagen' => 'ROG Ally.jpg',
+            'imagen' => 'ROG_Ally.jpeg',
         ]);
 
         Productos::create([
@@ -218,7 +218,7 @@ class ProductsSeeder extends Seeder
             'fecha_lanzamiento' => '2021-05-15',
             'precio' => 600000,
             'descripcion' => 'Una consola retro que combina juegos clásicos de Atari con capacidades modernas de streaming y aplicaciones.',
-            'imagen' => 'Atari VCS.jpg',
+            'imagen' => 'Atari_VCS.jpg',
         ]);
 
     }

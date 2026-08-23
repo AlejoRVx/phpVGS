@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function (): void {
 
     Route::prefix('pedidos')->group(function (): void {
         Route::get('/', [PedidosController::class, 'index'])->name('pedidos.index');
+        Route::get('/mini-cart', [PedidosController::class, 'miniCart'])->name('pedidos.mini-cart');
+        Route::delete('/mini-cart/{id}', [PedidosController::class, 'eliminarMiniCart'])->name('pedidos.mini-cart.eliminar');
         Route::post('/agregar/{id}', [PedidosController::class, 'agregar'])->name('pedidos.agregar');
         Route::put('/{id}', [PedidosController::class, 'actualizar'])->name('pedidos.update');
         Route::delete('/vaciar', [PedidosController::class, 'vaciar'])->name('pedidos.clear');

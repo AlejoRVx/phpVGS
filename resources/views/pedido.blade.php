@@ -107,6 +107,7 @@ function cambiarCantidad(id, cambio) {
                 },
                 body: JSON.stringify({ cantidad: nuevaCantidad })
             });
+            window.updateMiniCartBadge?.();
         } catch (_) {}
     }, 400);
 }

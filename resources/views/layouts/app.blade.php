@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:title" content="@yield('title', 'VGStorm')">
     <meta property="og:description" content="VGStorm - Tu tienda de videojuegos en línea.">
     <meta property="og:image" content="https://res.cloudinary.com/dsidu0tej/image/upload/v1781156632/VGStorm_cjxm5w.png">
@@ -59,11 +60,35 @@
             {{-- Acciones derecha --}}
             <div class="flex items-center space-x-3 sm:space-x-5">
                 @auth
-                    <a href="{{ route('pedidos.index') }}" class="relative p-2 text-gray-300 hover:text-blue-400 transition-colors group">
-                        <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </a>
+                    <div id="mini-cart-wrapper" class="relative mt-2">
+                        <a href="{{ route('pedidos.index') }}" id="mini-cart-trigger" class="relative p-2 text-gray-300 hover:text-blue-400 transition-colors group">
+                            <span class="relative inline-flex">
+                                <svg class="w-6 h-6 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                <span id="mini-cart-badge" class="absolute -top-1.5 -right-1.5 bg-purple-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden"></span>
+                            </span>
+                        </a>
+                        <div id="mini-cart-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-[100] overflow-hidden">
+                            <div class="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                                <h4 class="text-sm font-bold text-white">Mi Carrito</h4>
+                                <span id="mini-cart-count" class="text-xs text-gray-400"></span>
+                            </div>
+                            <div id="mini-cart-items" class="max-h-72 overflow-y-auto divide-y divide-gray-800"></div>
+                            <div id="mini-cart-footer" class="px-4 py-3 border-t border-gray-800 hidden">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-sm text-gray-400 font-semibold">Total</span>
+                                    <span id="mini-cart-total" class="text-lg font-bold text-purple-400"></span>
+                                </div>
+                                <a href="{{ route('pedidos.index') }}" class="block w-full text-center py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg transition">
+                                    Ir al carrito
+                                </a>
+                            </div>
+                            <div id="mini-cart-empty" class="hidden px-4 py-8 text-center">
+                                <p class="text-gray-400 text-sm">Tu carrito está vacío</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="relative group">
                         <button class="flex items-center space-x-1 sm:space-x-2 text-sm font-bold text-gray-200 hover:text-blue-400 transition-colors focus:outline-none py-2">

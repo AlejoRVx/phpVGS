@@ -82,6 +82,18 @@ class PedidosController extends Controller
         return redirect()->route('pedidos.index')->with('success', '✓ Producto eliminado');
     }
 
+    public function eliminarMiniCart(int $id): JsonResponse
+    {
+        $this->cart->remove($id);
+
+        return response()->json([
+            'success' => true,
+            'items' => array_values($this->cart->items()),
+            'total' => $this->cart->total(),
+            'totalItems' => $this->cart->totalItems(),
+        ]);
+    }
+
     public function vaciar(): RedirectResponse
     {
         $this->cart->clear();
@@ -102,5 +114,21 @@ class PedidosController extends Controller
         ]);
 
         return response()->json(['status' => 'ok']);
+    }
+
+    public function miniCart(): JsonResponse
+    {
+        $items = $this->cart->items();
+
+        if ($items === [] && Auth()->check()) {
+            $this->cart->loadFromDatabase(Auth()->id());
+            $items = $this->cart->items();
+        }
+
+        return response()->json([
+            'items' => array_values($items),
+            'total' => $this->cart->total(),
+            'totalItems' => $this->cart->totalItems(),
+        ]);
     }
 }
