@@ -8,6 +8,7 @@ sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-avail
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan storage:link --force
 php artisan migrate --force
 
 exec apache2-foreground
