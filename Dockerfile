@@ -22,6 +22,20 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
+RUN { \
+        echo '<Directory ${APACHE_DOCUMENT_ROOT}>'; \
+        echo '    Options -Indexes +FollowSymLinks'; \
+        echo '    AllowOverride None'; \
+        echo '    Require all granted'; \
+        echo ''; \
+        echo '    RewriteEngine On'; \
+        echo '    RewriteCond %{REQUEST_FILENAME} !-d'; \
+        echo '    RewriteCond %{REQUEST_FILENAME} !-f'; \
+        echo '    RewriteRule ^ index.php [L]'; \
+        echo '</Directory>'; \
+    } > /etc/apache2/conf-available/laravel-override.conf \
+    && a2enconf laravel-override
+
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 COPY docker/start.sh /usr/local/bin/start.sh
