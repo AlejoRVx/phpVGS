@@ -18,6 +18,7 @@ use App\Services\Pedidos\CheckoutService;
 use App\Services\Resenas\ResenaService;
 use App\Services\Usuarios\RecuperacionClaveService;
 use App\Services\Usuarios\UsuarioService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -50,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
-    }
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+    }   
 }
