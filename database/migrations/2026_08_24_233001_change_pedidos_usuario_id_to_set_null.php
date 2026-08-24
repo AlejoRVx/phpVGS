@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('Pedidos', function (Blueprint $table) {
-            $table->dropForeign('Pedidos_usuario_id_foreign');
+        Schema::table('pedidos', function (Blueprint $table) {
+            $table->dropForeign('pedidos_usuario_id_foreign');
             $table->foreignId('usuario_id')->nullable()->change();
-            $table->foreign('usuario_id')->references('id')->on('Usuarios')->nullOnDelete();
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->nullOnDelete();
         });
     }
 
     public function down(): void
     {
-        Schema::table('Pedidos', function (Blueprint $table) {
-            $table->dropForeign('Pedidos_usuario_id_foreign');
+        Schema::table('pedidos', function (Blueprint $table) {
+            $table->dropForeign('pedidos_usuario_id_foreign');
             $table->foreignId('usuario_id')->nullable(false)->change();
-            $table->foreign('usuario_id')->references('id')->on('Usuarios')->onDelete('cascade');
+            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
         });
     }
 };
