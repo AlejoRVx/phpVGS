@@ -1,5 +1,9 @@
 import './bootstrap';
 
+function badgeText(n) {
+    return n > 99 ? '99+' : String(n);
+}
+
 /**
  * Toast notification system (vanilla JS, reemplaza jQuery showToast)
  */
@@ -79,7 +83,7 @@ document.addEventListener('submit', (e) => {
             showToast(data.message, 'success');
             const badge = document.getElementById('mini-cart-badge');
             if (badge && data.total_items) {
-                badge.textContent = data.total_items;
+                badge.textContent = badgeText(data.total_items);
                 badge.classList.remove('hidden');
             }
         }
@@ -230,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function initMiniCart() {
         countEl.textContent = `${totalItems} ${totalItems === 1 ? 'artículo' : 'artículos'}`;
         totalEl.textContent = `$${new Intl.NumberFormat('es-CL').format(Math.round(total))}`;
 
-        badge.textContent = totalItems;
+        badge.textContent = badgeText(totalItems);
         badge.classList.remove('hidden');
 
         itemsContainer.innerHTML = items.map(item => `
@@ -293,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function initMiniCart() {
         if (newTotalItems > 0) {
             countEl.textContent = `${newTotalItems} artículos`;
             totalEl.textContent = `$${new Intl.NumberFormat('es-CL').format(Math.round(newTotal))}`;
-            badge.textContent = newTotalItems;
+            badge.textContent = badgeText(newTotalItems);
         }
 
         fetch(`/pedidos/mini-cart/${productId}`, {
@@ -315,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function initMiniCart() {
             if (data.totalItems === 0) {
                 badge.classList.add('hidden');
             } else {
-                badge.textContent = data.totalItems;
+                badge.textContent = badgeText(data.totalItems);
                 badge.classList.remove('hidden');
             }
         } catch (e) { /* silent */ }

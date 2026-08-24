@@ -33,7 +33,8 @@
             @yield('search-bar')
             @if(View::hasSection('search-bar'))
                 <div class="hidden md:flex flex-1 max-w-md relative group">
-                    <form action="{{ request()->is('*consolas*') ? route('productos.buscarconsolas') : route('productos.buscarjuegos') }}"
+                    <form id="catalog-search-form"
+                          action="{{ request()->is('*consolas*') ? route('productos.buscarconsolas') : route('productos.buscarjuegos') }}"
                           method="GET" class="w-full relative">
                         <input type="search" name="q" id="search-input" autocomplete="off"
                                placeholder="Buscar {{ request()->is('*consolas*') ? 'consolas' : 'juegos' }}..."

@@ -46,7 +46,7 @@
                         </a>
                         <p class="text-sm text-gray-400 mb-3">
                             <span class="font-semibold">Compañía:</span> {{ $producto->compania }}<br>
-                            <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}
+                            <span class="font-semibold">Lanzamiento:</span> {{ $producto->fecha_lanzamiento?->format('d/m/Y') ?? 'N/A' }}
                         </p>
                         <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700">
                             <span class="text-xl sm:text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
@@ -91,8 +91,17 @@ function saveAndLogin(productId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.getElementById('catalog-search-form');
     const searchInput = document.getElementById('search-input');
     const resultsContainer = document.getElementById('search-results-container');
+
+    if (searchInput && searchForm) {
+        searchInput.addEventListener('input', () => {
+            searchForm.action = searchInput.value.trim()
+                ? '{{ route("productos.buscarconsolas") }}'
+                : '{{ route("productos.consolas") }}';
+        });
+    }
     let searchTimer = null;
 
     if (searchInput && resultsContainer) {
@@ -110,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsContainer.classList.remove('hidden');
                 resultsContainer.innerHTML = '<div class="p-4 text-center text-purple-400 font-medium">Buscando...</div>';
 
-                fetch('{{ route("productos.buscarconsolas") }}?q=' + encodeURIComponent(q))
+                fetch('{{ route("productos.buscarconsolas") }}?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
                     .then(r => r.json())
                     .then(data => {
                         resultsContainer.innerHTML = data.html?.trim()

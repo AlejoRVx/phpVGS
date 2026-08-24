@@ -31,23 +31,6 @@
                 </a>
             </div>
 
-            {{-- Barra de búsqueda --}}
-            <div class="hidden md:flex flex-1 max-w-md relative group">
-                <form action="{{ route('productos.buscarjuegos') }}" method="GET" class="w-full relative">
-                    <input type="search" name="q" id="main-search-input" autocomplete="off"
-                           placeholder="Buscar juegos..."
-                           class="w-full bg-gray-800/50 border border-gray-700 text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder-gray-500">
-                </form>
-                <div id="main-search-results"
-                     class="absolute top-full left-0 w-full mt-2 z-[100] bg-gray-900 border border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.3)] rounded-xl overflow-hidden hidden">
-                </div>
-                <div class="absolute left-3 top-2.5 text-gray-500 group-focus-within:text-purple-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-            </div>
-
             {{-- Navegación desktop --}}
             <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium">
                 <a href="{{ route('main') }}" class="text-gray-300 hover:text-white transition-colors {{ request()->routeIs('main') ? 'text-blue-400 font-bold' : '' }}">Inicio</a>
@@ -130,11 +113,6 @@
     {{-- Menú móvil --}}
     <div id="main-mobile-menu" class="lg:hidden hidden border-t border-gray-700/50">
         <div class="px-4 py-4 space-y-2">
-            {{-- Search bar móvil --}}
-            <form action="{{ route('productos.buscarjuegos') }}" method="GET" class="mb-3">
-                <input type="search" name="q" placeholder="Buscar juegos..."
-                       class="w-full bg-gray-800/50 border border-gray-700 text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all placeholder-gray-500">
-            </form>
             <a href="{{ route('main') }}" class="block px-4 py-2.5 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition {{ request()->routeIs('main') ? 'text-blue-400 font-bold' : '' }}">Inicio</a>
             <a href="{{ route('productos.juegos') }}" class="block px-4 py-2.5 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition {{ request()->routeIs('productos.juegos') ? 'text-blue-400 font-bold' : '' }}">Juegos</a>
             <a href="{{ route('productos.consolas') }}" class="block px-4 py-2.5 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition {{ request()->routeIs('productos.consolas') ? 'text-blue-400 font-bold' : '' }}">Consolas</a>

@@ -35,15 +35,27 @@ class ProductosController extends Controller
         return $this->buscar($request, 'Consola');
     }
 
-    private function buscar(Request $request, string $tipo): JsonResponse
+    private function buscar(Request $request, string $tipo): JsonResponse|View
     {
         $request->validate(['q' => 'required|string|max:100']);
 
-        $productos = $this->catalogo->buscar($tipo, (string) $request->input('q'));
+        $q = (string) $request->input('q');
 
-        return response()->json([
-            'html' => view('partials.search_results', compact('productos'))->render(),
+        if ($request->ajax() || $request->wantsJson()) {
+            $productos = $this->catalogo->buscar($tipo, $q);
+
+            return response()->json([
+                'html' => view('partials.search_results', compact('productos'))->render(),
+            ]);
+        }
+
+        $method = $tipo === 'Juego' ? 'juegos' : 'consolas';
+        $productos = $this->catalogo->$method([
+            'q' => $q,
+            'orden' => 'nombre_asc',
         ]);
+
+        return view($tipo === 'Juego' ? 'juegos' : 'consolas', compact('productos'));
     }
 
     /**

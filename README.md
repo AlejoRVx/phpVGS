@@ -6,6 +6,10 @@
     Tienda en línea de videojuegos y consolas desarrollada con Laravel 12.
 </p>
 
+<p align="center">
+    <a href="https://vgstorm.onrender.com" target="_blank"><strong>🔗 Ver página desplegada</strong></a>
+</p>
+
 ---
 
 ## Descripción

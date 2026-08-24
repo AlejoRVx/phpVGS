@@ -49,7 +49,7 @@
                         <div class="text-sm text-gray-400 mb-4 space-y-1">
                             <p><span class="font-semibold text-gray-300">Género:</span> {{ $producto->genero }}</p>
                             <p><span class="font-semibold text-gray-300">Compañía:</span> {{ $producto->compania }}</p>
-                            <p><span class="font-semibold text-gray-300">Lanzamiento:</span> {{ $producto->fecha_lanzamiento->format('d/m/Y') }}</p>
+                            <p><span class="font-semibold text-gray-300">Lanzamiento:</span> {{ $producto->fecha_lanzamiento?->format('d/m/Y') ?? 'N/A' }}</p>
                         </div>
                         <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-700/50">
                             <span class="text-xl sm:text-2xl font-bold text-purple-400">${{ number_format($producto->precio, 2) }}</span>
@@ -94,9 +94,17 @@ function saveAndLogin(productId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Búsqueda en tiempo real (autocompletado)
+    const searchForm = document.getElementById('catalog-search-form');
     const searchInput = document.getElementById('search-input');
     const resultsContainer = document.getElementById('search-results-container');
+
+    if (searchInput && searchForm) {
+        searchInput.addEventListener('input', () => {
+            searchForm.action = searchInput.value.trim()
+                ? '{{ route("productos.buscarjuegos") }}'
+                : '{{ route("productos.juegos") }}';
+        });
+    }
     let searchTimer = null;
 
     if (searchInput && resultsContainer) {
@@ -114,7 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsContainer.classList.remove('hidden');
                 resultsContainer.innerHTML = '<div class="p-4 text-center text-purple-400 font-medium">Buscando...</div>';
 
-                fetch('{{ route("productos.buscarjuegos") }}?q=' + encodeURIComponent(q))
+                fetch('{{ route("productos.buscarjuegos") }}?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
                     .then(r => r.json())
                     .then(data => {
                         if (data.html?.trim()) {

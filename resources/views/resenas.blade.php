@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', $producto->nombre . ' - Reseñas')
+@section('search-bar')
+@endsection
 
 @php
     $iconEstrella = "m8.243 7.34 -6.38 0.925 -0.113 0.023a1 1 0 0 0 -0.44 1.684l4.622 4.499 -1.09 6.355 -0.013 0.11a1 1 0 0 0 1.464 0.944l5.706 -3 5.693 3 0.1 0.046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355 4.624 -4.5 0.078 -0.085a1 1 0 0 0 -0.633 -1.62l-6.38 -0.926 -2.852 -5.78a1 1 0 0 0 -1.794 0L8.243 7.34z";
@@ -259,5 +261,57 @@ function abirEditarResena() {
 function cerrarEditarResena() {
     document.getElementById('form-editar-resena').classList.add('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const isConsola = '{{ $producto->tipo }}' === 'Consola';
+    const buscarRoute = isConsola ? '{{ route("productos.buscarconsolas") }}' : '{{ route("productos.buscarjuegos") }}';
+    const catalogoRoute = isConsola ? '{{ route("productos.consolas") }}' : '{{ route("productos.juegos") }}';
+
+    const searchForm = document.getElementById('catalog-search-form');
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results-container');
+
+    if (searchInput && searchForm) {
+        searchForm.action = buscarRoute;
+        searchInput.placeholder = isConsola ? 'Buscar consolas...' : 'Buscar juegos...';
+        searchInput.addEventListener('input', () => {
+            searchForm.action = searchInput.value.trim() ? buscarRoute : catalogoRoute;
+        });
+    }
+
+    let searchTimer = null;
+    if (searchInput && resultsContainer) {
+        searchInput.addEventListener('keyup', () => {
+            const q = searchInput.value.trim();
+            clearTimeout(searchTimer);
+            if (q.length === 0) {
+                resultsContainer.classList.add('hidden');
+                resultsContainer.innerHTML = '';
+                return;
+            }
+            searchTimer = setTimeout(() => {
+                resultsContainer.classList.remove('hidden');
+                resultsContainer.innerHTML = '<div class="p-4 text-center text-purple-400 font-medium">Buscando...</div>';
+                fetch(buscarRoute + '?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                    .then(r => r.json())
+                    .then(data => {
+                        resultsContainer.innerHTML = data.html?.trim()
+                            ? data.html
+                            : '<div class="p-4 text-center text-gray-400 italic">No se encontraron resultados</div>';
+                    })
+                    .catch(() => {
+                        resultsContainer.innerHTML = '<div class="p-4 text-center text-red-400">Error en la búsqueda</div>';
+                    });
+            }, 300);
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#search-input') && !e.target.closest('#search-results-container')) {
+                resultsContainer.classList.add('hidden');
+            }
+        });
+    }
+});
 </script>
 @endpush
