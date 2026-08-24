@@ -100,7 +100,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/usuarios', [UsuariosController::class, 'listarUsuarios'])->name('usuarios.index');
     Route::get('/usuarios/{id}/editar', [UsuariosController::class, 'editarUsuario'])->name('usuarios.edit');
     Route::post('/usuarios/{id}/editar', [UsuariosController::class, 'actualizarUsuario'])->name('usuarios.update');
-    Route::patch('/usuarios/{id}', [UsuariosController::class, 'actualizarUsuario'])->name('usuarios.update');
+    Route::patch('/usuarios/{id}', [UsuariosController::class, 'actualizarUsuario'])->name('usuarios.patch');
     Route::delete('/usuarios/{id}', [UsuariosController::class, 'delete'])->name('usuarios.destroy');
 
     Route::resource('productos', AdminProductosController::class)->except(['show']);
