@@ -9,19 +9,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('Pedidos', function (Blueprint $table) {
+        Schema::table('pedidos', function (Blueprint $table) {
             $table->string('nombre_cliente', 255)->nullable()->after('total');
         });
 
-        DB::table('Pedidos')
-            ->join('Usuarios', 'Pedidos.usuario_id', '=', 'Usuarios.id')
-            ->whereNull('Pedidos.nombre_cliente')
-            ->update(['Pedidos.nombre_cliente' => DB::raw('Usuarios.nombre')]);
+        DB::table('pedidos')
+            ->join('usuarios', 'pedidos.usuario_id', '=', 'usuarios.id')
+            ->whereNull('pedidos.nombre_cliente')
+            ->update(['pedidos.nombre_cliente' => DB::raw('usuarios.nombre')]);
     }
 
     public function down(): void
     {
-        Schema::table('Pedidos', function (Blueprint $table) {
+        Schema::table('pedidos', function (Blueprint $table) {
             $table->dropColumn('nombre_cliente');
         });
     }
