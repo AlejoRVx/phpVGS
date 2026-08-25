@@ -75,7 +75,7 @@
                 <div>
                     <p class="text-white font-semibold text-sm">
                         #{{ str_pad($pedido->id, 6, '0', STR_PAD_LEFT) }}
-                        <span class="text-gray-400 font-normal">· {{ $pedido->usuario->nombre ?? 'N/A' }}</span>
+                        <span class="text-gray-400 font-normal">· {{ $pedido->nombre_cliente ?? 'N/A' }}</span>
                     </p>
                     <p class="text-gray-500 text-xs mt-0.5">{{ $pedido->created_at->format('d/m/Y H:i') }}</p>
                 </div>

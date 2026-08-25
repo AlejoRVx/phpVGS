@@ -34,6 +34,7 @@ class CheckoutService
                 'total' => $total,
                 'estado' => true,
                 'usuario_id' => Auth::id(),
+                'nombre_cliente' => Auth::user()->nombre,
             ]);
 
             Pedido_Productos::insert(array_map(fn (array $item) => [

@@ -48,7 +48,7 @@ class PedidoRepository
     public function ultimos(int $limite = 5): Collection
     {
         return Pedidos::query()
-            ->with(['pago', 'usuario:id,nombre'])
+            ->with(['pago'])
             ->orderByDesc('created_at')
             ->limit($limite)
             ->get();
