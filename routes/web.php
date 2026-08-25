@@ -59,7 +59,9 @@ Route::middleware('guest')->group(function (): void {
 */
 Route::middleware('auth')->group(function (): void {
     Route::get('/logout', [UsuariosController::class, 'cerrarsesion'])->name('logout');
+});
 
+Route::middleware(['auth', 'no.admin'])->group(function (): void {
     Route::post('/productos/juegos/{id}/resenas', [ResenasController::class, 'agregarresena'])
         ->name('productos.resenas.agregar');
 
